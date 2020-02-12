@@ -50,13 +50,16 @@ class Utility:
 
     def csv_file_to_amp(self, amplitude):
         k = open(amplitude, "r")
-        amp_ = self.cast_to_float(list(csv.reader(k)))
+        carrier = list(csv.reader(k))
+        amp_ = self.cast_to_float(carrier)
         return amp_
 
 
     def csv_file_to_phase(self, phase):
         k = open(phase, "r")
-        phase_ = self.cast_to_float(list(csv.reader(k)))
+        carrier = list(csv.reader(k))
+        print(carrier)
+        phase_ = self.cast_to_float(carrier)
         return phase_
 
 
