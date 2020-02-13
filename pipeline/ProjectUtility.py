@@ -79,10 +79,17 @@ class Utility:
                 array[i][j] = (array[i][j] - min_)/ (max_ - min_)
         return array
 
+    def frame_normalize_minmax_image(self, array):
+        for i in range(len(array)):
+            min_ = min(array[i])
+            max_ = max(array[i])
+            for j in range(len(array[i])):
+                array[i][j] = 255*(array[i][j] - min_)/ (max_ - min_)
+        return array
+
 
     def plot(self, array): #plots csi frame collections
-        if max(array) > 1:
-            array = self.frame_normalize_minmax(array)
+        array = self.frame_normalize_minmax_image(array)
         matrix = np.transpose(np.asarray(array))
         self.display_image(matrix)
         pass

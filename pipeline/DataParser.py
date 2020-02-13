@@ -2,8 +2,7 @@ import numpy as np
 from os import listdir
 from pipeline.ProjectUtility import Utility
 masterdirectory = "../datasets"
-tool = Utility()
-class DataParser:
+class DataParser(Utility):
 
     def __init__(self):
         self.datasetList = list()
@@ -18,7 +17,7 @@ class DataParser:
         return self.datasetList
 
     def getAmpArr(self, dataset):
-        return tool.csv_file_to_amp(masterdirectory + "/" + dataset + "/" + dataset + "_amplitude.csv")
+        return self.csv_file_to_amp(masterdirectory + "/" + dataset + "/" + dataset + "_amplitude.csv")
 
 
     def remove_gaps(self, data):
@@ -104,8 +103,21 @@ class DataParser:
 
         return self.get_data(start, start + size, chunkIdentifier)
 
+    def get_square_data_norm(self, start, chunkIdentifier):
+        return self.normalize(self.get_square_data(start, chunkIdentifier))
+
+    def get_data_norm(self, start, end, chunkIdentifier):
+        return self.normalize(self.get_data(start, end, chunkIdentifier))\
+
+    def test(self):
+        self.load_data("BedroomWork")
+        self.plot(self.get_square_data_norm(0, 4))
 
 k = DataParser()
 k.load_data("BedroomWork")
-print(np.shape(k.get_square_data(0, 3)))
+print(k.get_square_data(0,3))
+k.plot(k.get_square_data_norm(0, 4))
+k.plot(k.get_square_data_norm(0, 3))
+k.plot(k.get_square_data_norm(0, 2))
+k.plot(k.get_square_data_norm(0, 1))
 
