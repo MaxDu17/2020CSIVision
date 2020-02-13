@@ -71,11 +71,41 @@ class DataParser:
 
     def get_data(self, start, end, chunkIdentifier):
         if len(self.amparr) == 0:
-            raise Exception("You did not load any data")
+            raise Exception("You did not load any data") #constructive error feedback
+        if start > len(self.amparr) or end > len(self.amparr):
+            raise Exception("You overshot on your array access")
 
+        carrier = self.amparr[start:end]
+        if chunkIdentifier == 1:
+            return self.first_chunk(carrier)
+        elif chunkIdentifier == 2:
+            return self.second_chunk(carrier)
+        elif chunkIdentifier == 3:
+            return self.third_chunk(carrier)
+        elif chunkIdentifier == 4:
+            return self.remove_gaps(carrier)
+        elif chunkIdentifier == 0:
+            return carrier
+        else:
+            raise Exception("Invalid chunkIdentifier")
+
+    def get_square_data(self, start, chunkIdentifier):
+        size = 0
+        if chunkIdentifier == 1:
+            size = 54
+        elif chunkIdentifier == 2:
+            size = 59
+        elif chunkIdentifier == 3:
+            size = 59
+        elif chunkIdentifier == 4:
+            size = 172
+        elif chunkIdentifier == 0:
+            size = 192
+
+        return self.get_data(start, start + size, chunkIdentifier)
 
 
 k = DataParser()
-data = k.getAmpArr("BedroomWork")
-print(data[1])
-print(k.remove_gaps(data)[1])
+k.load_data("BedroomWork")
+print(np.shape(k.get_square_data(0, 3)))
+
