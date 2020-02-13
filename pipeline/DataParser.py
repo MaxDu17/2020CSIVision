@@ -7,6 +7,8 @@ class DataParser:
 
     def __init__(self):
         self.datasetList = list()
+        self.amparr = list()
+
         files = listdir(masterdirectory)
         for file in files:
             if file.find(".") < 0:
@@ -62,7 +64,14 @@ class DataParser:
             max_ = max(data[i])
             for j in range(len(data[i])):
                 data[i][j] = (data[i][j]- min_)/(max_-min_)
+        return data
 
+    def load_data(self, datafile): #must call at first
+        self.amparr = self.getAmpArr(datafile)
+
+    def get_data(self, start, end, chunkIdentifier):
+        if len(self.amparr) == 0:
+            raise Exception("You did not load any data")
 
 
 

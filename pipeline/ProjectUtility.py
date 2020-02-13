@@ -2,6 +2,7 @@ import numpy as np
 from pipeline.CSIFrame import CSIFrame
 import csv
 import pickle
+from matplotlib import pyplot as plt
 class Utility:
 
     def csv_file_to_pickle(self, amplitude, phase, picklename): #this takes csvs and turns them to pickle file
@@ -70,7 +71,26 @@ class Utility:
                 array[i][j] = float(array[i][j])
         return array
 
-test = Utility()
+    def frame_normalize_minmax(self, array):
+        for i in range(len(array)):
+            min_ = min(array[i])
+            max_ = max(array[i])
+            for j in range(len(array[i])):
+                array[i][j] = (array[i][j] - min_)/ (max_ - min_)
+        return array
 
-test.csv_file_to_pickle("../datasets/TwoPersonAmbient_amplitude.csv", "../datasets/TwoPersonAmbient_phase.csv", "../datasets/test.pkl")
+
+    def plot(self, array): #plots csi frame collections
+        if max(array) > 1:
+            array = self.frame_normalize_minmax(array)
+        matrix = np.transpose(np.asarray(array))
+        self.display_image(matrix)
+        pass
+
+    def display_image(self, matrix):  # this prints out a 3d image
+        images_plot = matrix.astype('uint8')
+        plt.imshow(images_plot)
+        plt.show()
+
+
 
