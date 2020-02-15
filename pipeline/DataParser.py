@@ -19,6 +19,10 @@ class DataParser(Utility):
     def getAmpArr(self, dataset):
         return self.csv_file_to_amp(masterdirectory + "/" + dataset + "/" + dataset + "_amplitude.csv")
 
+    def get_size(self):
+        if len(self.amparr) == 0:
+            raise Exception("You did not load any data")  # constructive error feedback
+        return len(self.amparr)
 
     def remove_gaps(self, data):
         newData = list()
@@ -29,7 +33,6 @@ class DataParser(Utility):
             newData.append(carrier)
 
         return newData
-
 
 
     def first_chunk(self, data):
@@ -113,6 +116,7 @@ class DataParser(Utility):
         self.load_data("BedroomWork")
         self.plot(self.get_square_data_norm(0, 4))
 
+'''
 k = DataParser()
 k.load_data("BedroomWork")
 print(k.get_square_data(0,3))
@@ -120,4 +124,5 @@ k.plot(k.get_square_data_norm(0, 4))
 k.plot(k.get_square_data_norm(0, 3))
 k.plot(k.get_square_data_norm(0, 2))
 k.plot(k.get_square_data_norm(0, 1))
+'''
 
