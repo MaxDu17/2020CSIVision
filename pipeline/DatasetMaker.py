@@ -8,9 +8,11 @@ class DataSet():
     def __init__(self):
         self.dp = DataParser()
         self.hyp = Hyperparameters()
-        self.bigData = self.dp.getMasterAmpArr()
 
-        self.labels = self.bigData.keys()
+
+        self.labels = self.dp.get_meta()
+        self.sizes = self.dp.return_each_dataset_size()
+
 
 
         self.train_count = 0
@@ -30,6 +32,10 @@ class DataSet():
 
 
     def next_train(self):
+        pass
+
+k = DataSet()
+
 
 
 

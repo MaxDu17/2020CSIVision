@@ -142,9 +142,7 @@ class DataParser(Utility):
     def get_data_norm(self, start, end, chunkIdentifier):
         return self.normalize(self.get_data(start, end, chunkIdentifier))\
 
-    def test(self):
-        self.load_data("BedroomWork")
-        self.plot(self.get_square_data_norm(0, 4))
+
 
     def return_size(self, chunkIdentifier):
         size = 0
@@ -161,6 +159,7 @@ class DataParser(Utility):
 
         return size
 
+
     def return_size_name(self, chunkIdentifier):
         size = 0
         if chunkIdentifier == "first":
@@ -176,13 +175,29 @@ class DataParser(Utility):
 
         return size
 
+    def return_each_dataset_size(self):
+        carrier = {}
+        for key, value in self.masteramparr.items():
+            carrier[key] = len(value)
+        return carrier
+
+    def test(self):
+        self.load_data("BedroomWork")
+        self.plot(self.get_square_data_norm(0, 4))
+        self.plot(self.get_square_data_norm(0, 3))
+        self.plot(self.get_square_data_norm(0, 2))
+        self.plot(self.get_square_data_norm(0, 1))
+        self.plot(self.get_square_data_norm(0, 0))
+
+
 k = DataParser()
 k.load_data("BedroomWork")
-print(k.get_square_data_norm(0,1))
-print(np.shape(k.get_square_data_norm(0, 1)))
-k.plot(k.get_square_data_norm(0, 4))
+
+#k.plot(k.get_square_data_norm(0, 4))
 k.plot(k.get_square_data_norm(0, 3))
 k.plot(k.get_square_data_norm(0, 2))
 k.plot(k.get_square_data_norm(0, 1))
+#k.plot(k.get_square_data_norm(0, 0))
+
 
 
