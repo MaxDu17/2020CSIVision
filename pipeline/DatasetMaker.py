@@ -3,15 +3,23 @@ from pipeline.DataParser import DataParser
 import random
 from pipeline.Hyperparameters import Hyperparameters
 
-class DataSet(DataParser, Hyperparameters):
+class DataSet():
 
     def __init__(self):
-        super().__init__()
-        self.labels = self.get_meta()
+        self.dp = DataParser()
+        self.hyp = Hyperparameters()
+        self.bigData = self.dp.getMasterAmpArr()
+
+        self.labels = self.bigData.keys()
+
+
         self.train_count = 0
-        self.training_set_size = self.TRAIN_PERCENT * self.get_size()
-        self.validation_set_size = self.VALIDATION_NUMBER
-        self.test_set_size = self.TEST_PERCENT * self.get_size()
+
+
+
+        self.training_set_size = self.hyp.TRAIN_PERCENT * self.dp.get_size()
+        self.validation_set_size = self.hyp.VALIDATION_NUMBER
+        self.test_set_size = self.hyp.TEST_PERCENT * self.dp.get_size()
 
         self.train_matrix = list()
 
