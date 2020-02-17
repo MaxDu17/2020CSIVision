@@ -93,7 +93,7 @@ class DatasetMaker():
         for label in self.labels: #each label
             self.dp.load_data(label)
             size = self.dp.get_size()
-
+            print("\tTrain set on label: " + str(label))
             for i in range(size - (self.test_start + self.hyp.TEST_NUMBER + self.size_of_sample)): #use the remainder
                 data = self.dp.get_square_data_norm(i + self.test_start, self.chunkIdentifier)
                 one_hot = self.make_one_hot(label)
