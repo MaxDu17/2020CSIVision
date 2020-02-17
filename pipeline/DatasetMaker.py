@@ -21,12 +21,48 @@ class DataSet():
         self.test_start = self.hyp.VALIDATION_NUMBER + self.size_of_sample - 1
         self.train_start = self.test_start + self.hyp.TEST_NUMBER - 1
 
+        self.train_matrix = list()
         self.train_count = 0
 
+        self.valid_count = 0
+        self.test_count = 0
 
+        self.make_valid_set()
+        self.make_test_set()
+        self.make_train_set()
 
+    def next_epoch(self):
         self.train_matrix = list()
+        for i in range(self.hyp.EPOCH_SIZE):
+            selection = random.randrange(1, len(self.train_set))
+            self.train_matrix.append(self.train_set[selection])
 
+
+    def next_train(self):
+        assert len(self.train_matrix) > 0, "you have not called next_epoch()!!!"
+        assert self.train_count < self.hyp.EPOCH_SIZE, "you have called next_train too many times"
+
+        data_value =  self.train_matrix[self.train_count]
+        self.train_count += 1
+        return data_value
+
+    def new_valid(self):
+        self.valid_count = 0
+
+    def next_valid(self):
+        assert self.valid_count < self.hyp.VALIDATION_NUMBER, "you have called next_valid too many times"
+        data_value = self.valid_set[self.valid_count]
+        self.valid_count += 1
+        return data_value
+
+    def new_test(self):
+        self.test_count = 0
+
+    def next_test(self):
+        assert self.test_count < self.hyp.TEST_NUMBER, "you have called next_test too many times"
+        data_value = self.test_set[self.test_count]
+        self.test_count += 1
+        return data_value
 
     def make_valid_set(self):
         self.valid_set = list()
@@ -50,10 +86,12 @@ class DataSet():
     def make_train_set(self): #not done
         self.train_set = list()
         for label in self.labels: #each label
-            for i in range(self.hyp.TEST_NUMBER):
+            self.dp.load_data(label)
+            size = self.dp.get_size()
+            for i in range(size - (self.test_start + self.hyp.TEST_NUMBER)): #use the remainder
                 data = self.dp.get_square_data_norm(i + self.test_start, self.chunkIdentifier)
                 one_hot = self.make_one_hot(label)
-                self.test_set.append(DataPipeline(data=data, label=label, oneHot=one_hot))
+                self.train_set.append(DataPipeline(data=data, label=label, oneHot=one_hot))
 
     def make_one_hot(self, label):
         one_hot_vector = np.zeros(len(label))
@@ -69,13 +107,7 @@ class DataSet():
                 return self.labels[i]
         raise Exception("Your one hot label are all zeros! (source: reverse_one_hot)")
 
-    def next_epoch(self):
-        self.train_count = 0
-        random.randrange(0, )
 
-
-    def next_train(self):
-        pass
 
 k = DataSet()
 

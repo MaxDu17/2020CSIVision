@@ -5,4 +5,6 @@ class Hyperparameters:
     LEARNING_RATE = 0.001
 
     MODE_OF_LEARNING = "third"
+    EPOCH_SIZE = 10
+
     #add more here
