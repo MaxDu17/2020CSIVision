@@ -4,7 +4,7 @@ import random
 from pipeline.Hyperparameters import Hyperparameters
 from pipeline.DataPipeline import DataPipeline
 
-class DataSet():
+class DatasetMaker():
 
     def __init__(self):
         self.dp = DataParser()
@@ -19,17 +19,22 @@ class DataSet():
 
         self.validation_start = 0
         self.test_start = self.hyp.VALIDATION_NUMBER + self.size_of_sample - 1
-        self.train_start = self.test_start + self.hyp.TEST_NUMBER - 1
+        self.train_start = self.test_start + self.hyp.TEST_NUMBER + self.size_of_sample - 1
 
         self.train_matrix = list()
         self.train_count = 0
 
         self.valid_count = 0
         self.test_count = 0
-
+        print("making validation set")
         self.make_valid_set()
+        print("making test set")
         self.make_test_set()
+        print("making train set")
         self.make_train_set()
+
+
+
 
     def next_epoch(self):
         self.train_matrix = list()
@@ -71,7 +76,7 @@ class DataSet():
             for i in range(self.hyp.VALIDATION_NUMBER):
                 data = self.dp.get_square_data_norm(i + self.validation_start, self.chunkIdentifier)
                 one_hot = self.make_one_hot(label)
-                self.valid_set.append(DataPipeline(data= data, label = label, oneHot = one_hot))
+                self.valid_set.append(DataPipeline(data= data, label = label, oneHot = one_hot, startIndex = i + self.validation_start))
 
 
     def make_test_set(self):
@@ -81,20 +86,21 @@ class DataSet():
             for i in range(self.hyp.TEST_NUMBER):
                 data = self.dp.get_square_data_norm(i + self.test_start, self.chunkIdentifier)
                 one_hot = self.make_one_hot(label)
-                self.test_set.append(DataPipeline(data=data, label=label, oneHot=one_hot))
+                self.test_set.append(DataPipeline(data=data, label=label, oneHot=one_hot, startIndex=i + self.test_start))
 
     def make_train_set(self): #not done
         self.train_set = list()
         for label in self.labels: #each label
             self.dp.load_data(label)
             size = self.dp.get_size()
-            for i in range(size - (self.test_start + self.hyp.TEST_NUMBER)): #use the remainder
+
+            for i in range(size - (self.test_start + self.hyp.TEST_NUMBER + self.size_of_sample)): #use the remainder
                 data = self.dp.get_square_data_norm(i + self.test_start, self.chunkIdentifier)
                 one_hot = self.make_one_hot(label)
-                self.train_set.append(DataPipeline(data=data, label=label, oneHot=one_hot))
+                self.train_set.append(DataPipeline(data=data, label=label, oneHot=one_hot, startIndex = i + self.test_start))
 
     def make_one_hot(self, label):
-        one_hot_vector = np.zeros(len(label))
+        one_hot_vector = np.zeros(len(self.labels))
         for i in range(len(self.labels)):
             if self.labels[i] == label:
                 one_hot_vector[i] = 1
@@ -108,8 +114,6 @@ class DataSet():
         raise Exception("Your one hot label are all zeros! (source: reverse_one_hot)")
 
 
-
-k = DataSet()
 
 
 

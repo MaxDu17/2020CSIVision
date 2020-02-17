@@ -2,7 +2,9 @@ class DataPipeline():
     data = []
     label = ""
     oneHot = []
-    def __init__(self, data, label, oneHot):
-        data = data
-        label = label
-        oneHot = oneHot
+    startIndex = 0
+    def __init__(self, data, label, oneHot, startIndex):
+        self.data = data
+        self.label = label
+        self.oneHot = oneHot
+        self.startIndex = startIndex

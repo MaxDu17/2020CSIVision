@@ -13,8 +13,8 @@ class DataParser(Utility):
         for file in files:
             if file.find(".") < 0:
                 try:
+                    self.masteramparr[file] = self.getAmpArr(file)
                     self.datasetList.append(file)
-                    self.masteramparr[file] =  self.getAmpArr(file)
                 except:
                     print(file + " was empty. I skipped it")
 
@@ -103,6 +103,8 @@ class DataParser(Utility):
         assert len(self.amparr) > 0, "you did not load any data"
 
         if start > len(self.amparr) or end > len(self.amparr):
+            print(str(start) + "\t" + str(end))
+            print(len(self.amparr))
             raise Exception("You overshot on your array access")
 
         carrier = self.amparr[start:end]
@@ -201,7 +203,7 @@ class DataParser(Utility):
         self.plot(self.get_square_data_norm(0, 1))
         self.plot(self.get_square_data_norm(0, 0))
 
-
+'''
 k = DataParser()
 k.load_data("BedroomWork")
 
@@ -210,6 +212,7 @@ k.plot(k.get_square_data_norm(0, 3))
 k.plot(k.get_square_data_norm(0, 2))
 k.plot(k.get_square_data_norm(0, 1))
 k.plot(k.get_square_data_norm(0, 0))
+'''
 
 
 
