@@ -93,14 +93,15 @@ class DataParser(Utility):
         return data
 
     def load_data(self, datafile): #must call at first
+        assert datafile in self.datasetList, "your file does not exist"
         try:
             self.amparr = self.masteramparr[datafile]
         except:
             raise Exception("Unable to load the filename specified")
 
     def get_data(self, start, end, chunkIdentifier):
-        if len(self.amparr) == 0:
-            raise Exception("You did not load any data") #constructive error feedback
+        assert len(self.amparr) > 0, "you did not load any data"
+
         if start > len(self.amparr) or end > len(self.amparr):
             raise Exception("You overshot on your array access")
 
@@ -159,6 +160,17 @@ class DataParser(Utility):
 
         return size
 
+    def return_chunkIdent_name(self, chunkIdentifier):
+        if chunkIdentifier == "first":
+            return 1
+        elif chunkIdentifier == "second":
+            return 2
+        elif chunkIdentifier == "third":
+            return 3
+        elif chunkIdentifier == "all":
+            return 4
+        elif chunkIdentifier == "raw":
+            return 0
 
     def return_size_name(self, chunkIdentifier):
         size = 0
@@ -193,11 +205,11 @@ class DataParser(Utility):
 k = DataParser()
 k.load_data("BedroomWork")
 
-#k.plot(k.get_square_data_norm(0, 4))
+k.plot(k.get_square_data_norm(0, 4))
 k.plot(k.get_square_data_norm(0, 3))
 k.plot(k.get_square_data_norm(0, 2))
 k.plot(k.get_square_data_norm(0, 1))
-#k.plot(k.get_square_data_norm(0, 0))
+k.plot(k.get_square_data_norm(0, 0))
 
 
 
