@@ -1,4 +1,4 @@
-from pipeline.DataParser import DataParser
+
 import tensorflow as tf
 import numpy as np
 import csv
@@ -6,13 +6,20 @@ import os
 from pipeline.ProjectUtility import Utility
 import shutil
 import pickle
-util = Utility()
-from pipeline.DataPipeline import DataPipeline
+
+
 from pipeline.MyCNNLibrary import * #this is my own "keras" extension onto tensorflow
 from pipeline.Hyperparameters import Hyperparameters
-version = "BasicCNN_1"
+from pipeline.DatasetMaker import DatasetMaker
+from pipeline.DataParser import DataParser
+HYP = Hyperparameters()
+DP = DataParser()
 
-big_list = list() #this is the weights and biases matrix
+
+
+version = "BasicCNN_" + HYP.MODE_OF_LEARNING
+
+weight_bias_list = list() #this is the weights and biases matrix
 
 base_directory = "Graphs_and_Results/Vanilla" + "/" + version + "/"
 try:
@@ -23,18 +30,18 @@ except:
     pass
 
 logger = Logging(base_directory, 20, 20, 100) #makes logging object
-
+pool_size = (int(DP.return_size_name(HYP.MODE_OF_LEARNING)/4) + 1)**2 * 8
 class Model():
     def __init__(self):
-        self.cnn_1 = Convolve(big_list, [3, 3, 1, 4], "Layer_1_CNN")
-        self.cnn_2 = Convolve(big_list, [3, 3, 4, 4], "Layer_2_CNN")
+        self.cnn_1 = Convolve(weight_bias_list, [3, 3, 1, 4], "Layer_1_CNN")
+        self.cnn_2 = Convolve(weight_bias_list, [3, 3, 4, 4], "Layer_2_CNN")
         self.pool_1 = Pool()
 
-        self.cnn_3 = Convolve(big_list, [3, 3, 4, 8], "Layer_2_CNN")
+        self.cnn_3 = Convolve(weight_bias_list, [3, 3, 4, 8], "Layer_2_CNN")
         self.pool_2 = Pool()
 
-        self.flat = Flatten([-1, 25*25*8], "Fully_Connected")
-        self.fc_1 = FC(big_list, [25*25*8, output_size], "Layer_1_FC")
+        self.flat = Flatten([-1, pool_size], "Fully_Connected")
+        self.fc_1 = FC(weight_bias_list, [pool_size, DM.num_labels()], "Layer_1_FC")
         self.softmax = Softmax()
 
     def build_model_from_pickle(self, file_dir):
@@ -75,25 +82,26 @@ def Big_Train():
     print(tf.test.is_gpu_available())
     print("*****************Training*****************")
 
-    datafeeder = Prep(TEST_AMOUNT, VALID_AMOUNT, [version])
+    print("loading dataset")
+    DM = DatasetMaker()
 
-    optimizer = tf.keras.optimizers.Adam(learning_rate = LEARNING_RATE_INIT)
+    optimizer = tf.keras.optimizers.Adam(learning_rate = HYP.LEARNING_RATE) #can use a changing learning rate
     loss_function = tf.keras.losses.CategoricalCrossentropy()
 
-    print("loading dataset")
-    datafeeder.load_train_to_RAM()  # loads the training data to RAM
+
     summary_writer = tf.summary.create_file_writer(logdir=base_directory)
     print("starting training")
 
     print("Making model")
     model = Model()
     model.build_model()
+
     tf.summary.trace_on(graph=True, profiler=True)
 
 
     for epoch in range(1001):
-        data, label = datafeeder.nextBatchTrain_dom(150)
-        data = data[0]
+        data, label = DM.next_epoch_batch()
+
 
         with tf.GradientTape() as tape:
             predictions, l2_loss = model.call(data) #this is the big call
