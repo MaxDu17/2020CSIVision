@@ -107,30 +107,30 @@ def Big_Train():
             predictions, l2_loss = model.call(data) #this is the big call
 
             pred_loss = loss_function(label, predictions) #this is the loss function
-            pred_loss = pred_loss + L2WEIGHT * l2_loss #this implements lasso regularization
+            pred_loss = pred_loss + HYP.L2WEIGHT * l2_loss #this implements lasso regularization
 
             if epoch == 0: #creates graph
                 with summary_writer.as_default():
                     tf.summary.trace_export(name="Graph", step=0, profiler_outdir=base_directory)
 
             if epoch % 50 == 0: #takes care of validation accuracy
-                valid_accuracy = Validation(model, datafeeder)
+                valid_accuracy = Validation(model, DM)
                 with summary_writer.as_default():
                     logger.log_valid(valid_accuracy, epoch)
 
             with summary_writer.as_default(): #this is the big player logger and printout
-                logger.log_train(epoch, predictions, label, pred_loss, l2_loss, big_list)
+                logger.log_train(epoch, predictions, label, pred_loss, l2_loss, weight_bias_list)
 
-        gradients = tape.gradient(pred_loss, big_list)
-        optimizer.apply_gradients(zip(gradients, big_list))
+        gradients = tape.gradient(pred_loss, weight_bias_list)
+        optimizer.apply_gradients(zip(gradients, weight_bias_list))
 
-    Test_live(model, datafeeder)
+    Test_live(model, DM)
 
 def Validation(model, datafeeder):
     print("\n##############VALIDATION##############\n")
 
-    data, label = datafeeder.GetValid_dom()
-    data = data[0]
+    data, label = datafeeder.valid_batch()
+
     predictions, l2loss = model.call(data)
     assert len(label) == len(predictions)
     valid_accuracy = accuracy(predictions, label)
@@ -141,8 +141,8 @@ def Validation(model, datafeeder):
 def Test_live(model, datafeeder):
     print("\n##############TESTING##############\n")
 
-    data, label = datafeeder.GetTest_dom()
-    data = data[0]
+    data, label = datafeeder.test_batch()
+
     predictions, l2loss = model.call(data)
     logger.test_log(predictions, label)
 
@@ -155,10 +155,11 @@ def Test():
     model = Model()
     model.build_model_from_pickle(base_directory + "SAVED_WEIGHTS.pkl")
 
-    datafeeder = Prep(TEST_AMOUNT, VALID_AMOUNT, [version])
-    datafeeder.load_train_to_RAM()
-    data, label = datafeeder.GetTest_dom()
-    data = data[0]  # this is because we now have multiple images in the pickle
+    DM = DatasetMaker()
+
+    data, label = DM.test_batch()
+
+    #data = data[0]  # this is because we now have multiple images in the pickle
     predictions, l2loss = model.call(data)
 
     print("This is the test set accuracy: {}".format(accuracy(predictions, label)))
