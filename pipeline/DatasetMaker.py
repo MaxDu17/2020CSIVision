@@ -2,7 +2,7 @@ import numpy as np
 from pipeline.DataParser import DataParser
 import random
 from pipeline.Hyperparameters import Hyperparameters
-from pipeline.DataPipeline import DataPipeline
+#from pipeline.DataPipeline import DataPipeline
 
 class DatasetMaker():
 
@@ -44,7 +44,7 @@ class DatasetMaker():
         for i in range(self.hyp.EPOCH_SIZE):
             selection = random.randrange(1, len(self.train_set_data))
             self.train_matrix_data.append(self.train_set_data[selection])
-            self.train_matrix_labels.append(self.train_set_data[selection])
+            self.train_matrix_labels.append(self.train_set_labels[selection])
 
 
     def next_epoch_batch(self):
@@ -54,7 +54,7 @@ class DatasetMaker():
         for i in range(self.hyp.EPOCH_SIZE):
             selection = random.randrange(1, len(self.train_set_data))
             self.train_matrix_data.append(self.train_set_data[selection])
-            self.train_matrix_labels.append(self.train_set_data[selection])
+            self.train_matrix_labels.append(self.train_set_labels[selection])
         return self.train_matrix_data, self.train_matrix_labels
 
 
@@ -77,6 +77,9 @@ class DatasetMaker():
         self.valid_count += 1
         return data_value, label_value
 
+    def valid_batch(self):
+        return self.valid_set_data, self.valid_set_labels
+
     def new_test(self):
         self.test_count = 0
 
@@ -86,6 +89,9 @@ class DatasetMaker():
         label_value = self.test_set_labels[self.test_count]
         self.test_count += 1
         return data_value, label_value
+
+    def test_batch(self):
+        return self.test_set_data, self.test_set_labels
 
     def make_valid_set(self):
         self.valid_set_data = list()
@@ -134,18 +140,26 @@ class DatasetMaker():
         return len(self.labels)
 
     def make_one_hot(self, label):
-        one_hot_vector = np.zeros(len(self.labels))
+        one_hot_vector = list(np.zeros(len(self.labels)))
         for i in range(len(self.labels)):
             if self.labels[i] == label:
                 one_hot_vector[i] = 1
+        assert max(one_hot_vector) == 1, "the label was not found"
         return one_hot_vector
 
     def reverse_one_hot(self, one_hot_label):
-        assert len(one_hot_label) == len(self.labels)
-        for i in range(len(one_hot_label)):
-            if one_hot_label[i] == 1:
-                return self.labels[i]
-        raise Exception("Your one hot label are all zeros! (source: reverse_one_hot)")
+        assert len(one_hot_label) == len(self.labels), "your vector does not match the labels"
+        assert max(one_hot_label) == 1, "your one_hot_label is all zeros"
+        return self.labels[np.argmax(one_hot_label)]
+
+    def _debug_get_valid_size(self):
+        return len(self.valid_set_data)
+
+    def _debug_get_train_size(self):
+        return len(self.train_set_data)
+
+    def _debug_get_test_size(self):
+        return len(self.test_set_data)
 
 
 

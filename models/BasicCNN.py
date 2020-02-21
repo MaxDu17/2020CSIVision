@@ -19,7 +19,9 @@ try:
     os.mkdir(base_directory)
     print("made directory {}".format(base_directory)) #this can only go one layer deep
 except:
+    print("directory exists!")
     pass
+
 logger = Logging(base_directory, 20, 20, 100) #makes logging object
 
 class Model():

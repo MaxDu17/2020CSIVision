@@ -6,23 +6,16 @@ import numpy as np
 DM = DatasetMaker()
 tool = Utility()
 
-big = DM.next_epoch_batch()
+data, label = DM.next_epoch_batch()
 print("\n\n")
 print("The validation set start at:" + str(DM.validation_start) + "and constains " +
-      str(len(DM.valid_set)) + " elements")
-print("The test set starts at: " + str(DM.test_start) + "and contains " +
-      str(len(DM.test_set)) + " elements")
+      str(DM._debug_get_valid_size()) + " elements")
+print("The test set starts at: " + str(DM.test_start) + " and contains " +
+      str(DM._debug_get_test_size()) + " elements")
 print("The training set starts at (universal): " + str(DM.train_start))
-print("This epoch's has " + str(len(DM.train_matrix)) + " elements")
-print("This is the number of frames for training: " + str(len(DM.train_set)))
-print(np.shape(big))
-print(len(big[0]))
 
-'''
-trainObject = DM.next_train()
-print(trainObject.label)
-print(trainObject.oneHot)
-print(trainObject.data)
-print(trainObject.startIndex)
-tool.plot(trainObject.data)
-'''
+print("This is the number of frames for training: " + str(DM._debug_get_train_size()))
+print(np.shape(data))
+print(data)
+print(np.shape(label))
+print(label)
