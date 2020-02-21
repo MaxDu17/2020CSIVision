@@ -10,17 +10,17 @@ util = Utility()
 from pipeline.DataPipeline import DataPipeline
 from pipeline.MyCNNLibrary import * #this is my own "keras" extension onto tensorflow
 from pipeline.Hyperparameters import Hyperparameters
-
+version = "BasicCNN_1"
 
 big_list = list() #this is the weights and biases matrix
 
-base_directory = "Graphs_and_Results/basic_test/" + version + "/"
+base_directory = "Graphs_and_Results/Vanilla" + "/" + version + "/"
 try:
     os.mkdir(base_directory)
     print("made directory {}".format(base_directory)) #this can only go one layer deep
 except:
     pass
-logger = Logging(base_directory, 20, 20, 100)
+logger = Logging(base_directory, 20, 20, 100) #makes logging object
 
 class Model():
     def __init__(self):
