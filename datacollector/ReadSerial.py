@@ -1,8 +1,10 @@
-#this doesn't work yet
+
 import serial
 import pickle
 import csv
-from ParserTool import Parser
+import pyaudio
+import time
+from datacollector.ParserTool import Parser
 from serial.tools import list_ports
 import numpy as np
 tool = Parser(False, "")
