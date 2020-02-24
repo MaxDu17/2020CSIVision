@@ -20,7 +20,7 @@ except:
     quit()
 
 
-MASTERNAME = "../datasets/BedroomWalk/BedroomWalk"
+MASTERNAME = "../datasets/BedroomSleep/BedroomSleep"
 #available
 #BedroomAmbient
 #BedroomFall
@@ -77,8 +77,7 @@ def recoverOperations():
             pickle.dump(frames, open(MASTERNAME + ".pkl", "wb"))
 
     except:
-        print("No existing file to recover. Press enter to continue.")
-        input()
+        input("No existing file to recover. Press enter to continue.")
 
 
 def main():
@@ -99,7 +98,8 @@ def main():
 
     idle_counter = 0
     count = 0
-    ser.flush()
+
+    ser.reset_input_buffer()
 
     while count < DATALENGTH:
         print(count)
