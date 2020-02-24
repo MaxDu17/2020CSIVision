@@ -37,7 +37,7 @@ def record_error( data, labels, pred): #this function will record the right and 
     return right, wrong
 
 def record_error_with_labels(data, labels, pred):
-    assert len(data[0]) == len(pred), "your data and prediction don't match"
+    assert len(data) == len(pred), "your data and prediction don't match"
     assert len(pred) == len(labels), "your prediction and labels don't match"
 
     wrong = list()
