@@ -99,6 +99,7 @@ def main():
 
     idle_counter = 0
     count = 0
+    ser.flush()
 
     while count < DATALENGTH:
         print(count)
