@@ -132,26 +132,27 @@ class Convolve():
     def build(self, from_file = False, weights = None): #input shape is NOT the parameter you feed into convolve's constructor
         if not(from_file):
             self.w_conv = tf.Variable(initial_value = tf.random.truncated_normal(self.shape, stddev =  0.1),
-                                        name = self.name + "_weight", trainable = True)
+                                        name = self.name + "_weight", trainable = True, dtype = tf.dtypes.float32)
             self.current_list.append(self.w_conv)
 
             self.b_conv = tf.Variable(initial_value = tf.zeros(self.shape[3]),
-                                        name=self.name + "_bias", trainable = True)
+                                        name=self.name + "_bias", trainable = True, dtype = tf.dtypes.float32)
             self.current_list.append(self.b_conv)
         else:
             print("Loading filters from saved weights")
             assert np.shape(weights[0]) == self.shape, "Shape mis-match in class Convolve"
 
             self.w_conv = tf.Variable(initial_value=weights[0],
-                                        name=self.name + "_weight", trainable=True)
+                                        name=self.name + "_weight", trainable=True, dtype = tf.dtypes.float32)
             self.current_list.append(self.w_conv)
 
             self.b_conv = tf.Variable(initial_value=weights[1],
-                                        name=self.name + "_bias", trainable=True)
+                                        name=self.name + "_bias", trainable=True, dtype = tf.dtypes.float32)
             self.current_list.append(self.b_conv)
 
 
     def call(self, input):
+        input = tf.cast(input, dtype = np.float32)
         with tf.name_scope("Convolve"):
             conv = tf.nn.relu(tf.nn.conv2d(input, self.w_conv, strides=[1, 1, 1, 1], padding='SAME', name="conv"))
             conv = conv + self.b_conv

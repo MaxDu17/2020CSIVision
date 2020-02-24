@@ -21,7 +21,7 @@ version = "BasicCNN_" + HYP.MODE_OF_LEARNING
 
 weight_bias_list = list() #this is the weights and biases matrix
 
-base_directory = "Graphs_and_Results/Vanilla" + "/" + version + "/"
+base_directory = "../Graphs_and_Results/Vanilla" + "/" + version + "/"
 try:
     os.mkdir(base_directory)
     print("made directory {}".format(base_directory)) #this can only go one layer deep
@@ -32,7 +32,7 @@ except:
 logger = Logging(base_directory, 20, 20, 100) #makes logging object
 pool_size = (int(DP.return_size_name(HYP.MODE_OF_LEARNING)/4) + 1)**2 * 8
 class Model():
-    def __init__(self):
+    def __init__(self, DM):
         self.cnn_1 = Convolve(weight_bias_list, [3, 3, 1, 4], "Layer_1_CNN")
         self.cnn_2 = Convolve(weight_bias_list, [3, 3, 4, 4], "Layer_2_CNN")
         self.pool_1 = Pool()
@@ -93,8 +93,16 @@ def Big_Train():
     print("starting training")
 
     print("Making model")
-    model = Model()
-    model.build_model()
+    model = Model(DM)
+    try:
+        semantic = input("restore model? (y,n)")
+        if semantic == "y":
+            model.build_model_from_pickle(base_directory + "SAVED_WEIGHTS.pkl")
+        else:
+            model.build_model()
+    except:
+        model.build_model()
+
 
     tf.summary.trace_on(graph=True, profiler=True)
 
@@ -169,6 +177,7 @@ def main():
     print("Starting the program!")
     query = input("What mode do you want? Train (t) or Test from model (m)?\n")
     if query == "t":
+
         Big_Train()
     if query == "m":
         Test()

@@ -55,7 +55,8 @@ class DatasetMaker():
             selection = random.randrange(1, len(self.train_set_data))
             self.train_matrix_data.append(self.train_set_data[selection])
             self.train_matrix_labels.append(self.train_set_labels[selection])
-        return self.train_matrix_data, self.train_matrix_labels
+        returnable_data = np.reshape(self.train_matrix_data, [self.hyp.EPOCH_SIZE, self.size_of_sample, self.size_of_sample, 1])
+        return returnable_data, self.train_matrix_labels
 
 
     def next_train(self):
@@ -78,7 +79,9 @@ class DatasetMaker():
         return data_value, label_value
 
     def valid_batch(self):
-        return self.valid_set_data, self.valid_set_labels
+        returnable_data = np.reshape(self.valid_set_data,
+                                     [self.hyp.VALIDATION_NUMBER*self.num_labels(), self.size_of_sample, self.size_of_sample, 1])
+        return returnable_data, self.valid_set_labels
 
     def new_test(self):
         self.test_count = 0
@@ -91,7 +94,9 @@ class DatasetMaker():
         return data_value, label_value
 
     def test_batch(self):
-        return self.test_set_data, self.test_set_labels
+        returnable_data = np.reshape(self.test_set_data,
+                                     [self.hyp.TEST_NUMBER*self.num_labels(), self.size_of_sample, self.size_of_sample, 1])
+        return returnable_data, self.test_set_labels
 
     def make_valid_set(self):
         self.valid_set_data = list()

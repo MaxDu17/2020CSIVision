@@ -1,7 +1,7 @@
 import matplotlib
 import pickle
 import numpy as np
-from Utility import Utility
+from models.Utility import Utility
 tool = Utility()
 
 class CSIFrame(): #this object stores the csi frame information
@@ -29,7 +29,7 @@ def normalizeandround2(matrix):
         for j in range(len(matrix[0])):
             matrix[i][j] = int(255 * (matrix[i][j] - minval) / (maxval - minval))
     return matrix
-frames = pickle.load(open("TwoPersonAmbient.pkl", "rb"))
+frames = pickle.load(open("../datasets/BedroomAmbient/BedroomAmbient.pkl", "rb"))
 matrix = []
 for frame in frames:
     if(frame != None):

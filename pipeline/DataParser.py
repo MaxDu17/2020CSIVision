@@ -205,7 +205,7 @@ class DataParser(Utility):
 
 '''
 k = DataParser()
-k.load_data("BedroomWork")
+k.load_data("BedroomAmbient")
 
 k.plot(k.get_square_data_norm(0, 4))
 k.plot(k.get_square_data_norm(0, 3))
