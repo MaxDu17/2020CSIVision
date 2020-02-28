@@ -20,7 +20,7 @@ except:
     quit()
 
 
-MASTERNAME = "../datasets/BedroomWork/BedroomWork"
+MASTERNAME = "../datasets/BedroomFall/BedroomFall"
 #available
 #BedroomAmbient
 #BedroomFall
