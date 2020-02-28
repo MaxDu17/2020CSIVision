@@ -160,10 +160,9 @@ def Test_live(model, datafeeder):
 
 def Test():
     print("Making model")
-    model = Model()
-    model.build_model_from_pickle(base_directory + "SAVED_WEIGHTS.pkl")
-
     DM = DatasetMaker()
+    model = Model(DM)
+    model.build_model_from_pickle(base_directory + "SAVED_WEIGHTS.pkl")
 
     data, label = DM.test_batch()
 

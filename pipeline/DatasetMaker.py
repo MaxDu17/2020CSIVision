@@ -166,8 +166,40 @@ class DatasetMaker():
     def _debug_get_test_size(self):
         return len(self.test_set_data)
 
+    def _debug_export_test_set(self):
+        path = "../setImages/test/"
+        ambcount = 0
+        workcount = 0
+        sleepcount = 0
+        walkcount = 0
+        fallcount = 0
 
+        for i in range(len(self.test_set_data)):
+            label = str(self.labels[np.argmax(self.test_set_labels[i])])
 
+            if label == "BedroomAmbient":
+                temppath = path + label + "_" + str(ambcount)
+                ambcount+=1
+            elif label == "BedroomFall":
+                temppath = path + label + "_" + str(fallcount)
+                fallcount += 1
+            elif label == "BedroomSleep":
+                temppath = path + label + "_" + str(sleepcount)
+                sleepcount += 1
+            elif label == "BedroomWalk":
+                temppath = path + label + "_" + str(walkcount)
+                walkcount += 1
+            elif label == "BedroomWork":
+                temppath = path + label + "_" + str(workcount)
+                workcount += 1
+            else:
+                raise Exception("Something wrong here")
+
+            self.dp.save_image(self.dp.frame_normalize_minmax_image(self.test_set_data[i]), temppath + ".jpg", "L")
+            print(temppath)
+
+k = DatasetMaker()
+k._debug_export_test_set()
 
 
 
