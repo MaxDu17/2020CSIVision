@@ -4,7 +4,7 @@ import numpy as np
 
 from pipeline.DataParser import DataParser
 k = DataParser()
-LOAD = "BedroomSleep"
+LOAD = "BedroomFall"
 k.load_data(LOAD)
 
 def plot_operations(in_):
@@ -14,38 +14,34 @@ def plot_operations(in_):
     plt.imshow(images_plot)
     return matrix
 
-'''
-#plt.plot(2, 3, 1, title = "Whole")
-plot_operations(k.get_data(0, 1000, 4))
-'''
-START = 100
 
-plt.subplot(2, 3, 1, title = "Whole")
-plot_operations(k.get_square_data_norm(START, 4))
+def plot_segments():
+    START = 100
+
+    plt.subplot(2, 3, 1, title = "Whole")
+    plot_operations(k.get_square_data_norm(START, 4))
 
 
-plt.subplot(2, 3, 2, title = "Third (Bottom)")
-plot_operations(k.get_square_data_norm(START, 3))
+    plt.subplot(2, 3, 2, title = "Third (Bottom)")
+    plot_operations(k.get_square_data_norm(START, 3))
 
-plt.subplot(2, 3, 3, title = "Second (Middle)")
-plot_operations(k.get_square_data_norm(START, 2))
+    plt.subplot(2, 3, 3, title = "Second (Middle)")
+    plot_operations(k.get_square_data_norm(START, 2))
 
-plt.subplot(2, 3, 4, title = "First (Top)")
-plot_operations(k.get_square_data_norm(START, 1))
+    plt.subplot(2, 3, 4, title = "First (Top)")
+    plot_operations(k.get_square_data_norm(START, 1))
 
-plt.subplot(2, 3, 5, title = "Raw")
-plot_operations(k.get_square_data_norm(START, 0))
+    plt.subplot(2, 3, 5, title = "Raw")
+    plot_operations(k.get_square_data_norm(START, 0))
 
-plt.suptitle(LOAD)
+    plt.suptitle(LOAD)
 
-plt.show(block=True)
+    plt.show(block=True)
+
+def plot_whole():
+
+    plot_operations(k.get_data(0, 1000, 4))
+    plt.show(block=True)
 
 
-
-'''
-k.plot(k.get_square_data_norm(0, 4))
-k.plot(k.get_square_data_norm(0, 3))
-k.plot(k.get_square_data_norm(0, 2))
-k.plot(k.get_square_data_norm(0, 1))
-k.plot(k.get_square_data_norm(0, 0))
-'''
+plot_whole()
