@@ -17,7 +17,7 @@ DP = DataParser()
 
 
 
-version = "WallCNN_" + HYP.MODE_OF_LEARNING
+version = "nullset_" + HYP.MODE_OF_LEARNING
 
 weight_bias_list = list() #this is the weights and biases matrix
 
