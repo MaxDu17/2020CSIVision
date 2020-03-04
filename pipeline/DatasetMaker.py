@@ -197,10 +197,10 @@ class DatasetMaker():
 
             self.dp.save_image(self.dp.frame_normalize_minmax_image(self.test_set_data[i]), temppath + ".jpg", "L")
             print(temppath)
-
+'''
 k = DatasetMaker()
 k._debug_export_test_set()
-
+'''
 
 
 

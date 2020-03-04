@@ -4,7 +4,7 @@ import numpy as np
 
 from pipeline.DataParser import DataParser
 k = DataParser()
-LOAD = "BedroomFall"
+LOAD = "BedroomWork"
 k.load_data(LOAD)
 
 def plot_operations(in_):
@@ -21,7 +21,6 @@ def plot_segments():
     plt.subplot(2, 3, 1, title = "Whole")
     plot_operations(k.get_square_data_norm(START, 4))
 
-
     plt.subplot(2, 3, 2, title = "Third (Bottom)")
     plot_operations(k.get_square_data_norm(START, 3))
 
@@ -37,6 +36,7 @@ def plot_segments():
     plt.suptitle(LOAD)
 
     plt.show(block=True)
+
 
 def plot_whole():
 
