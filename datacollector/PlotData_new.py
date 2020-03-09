@@ -4,7 +4,7 @@ import numpy as np
 
 from pipeline.DataParser import DataParser
 k = DataParser()
-LOAD = "BedroomWork"
+LOAD = "BedroomFall"
 k.load_data(LOAD)
 
 def plot_operations(in_):
