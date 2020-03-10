@@ -5,7 +5,7 @@ from pipeline.Hyperparameters import Hyperparameters
 
 HYP = Hyperparameters()
 Util = Utility()
-version = "BasicCNN_" + HYP.MODE_OF_LEARNING
+version = "DownstairsCNN_" + HYP.MODE_OF_LEARNING
 
 base_directory = "../Graphs_and_Results/Vanilla" + "/" + version + "/confusion.csv"
 

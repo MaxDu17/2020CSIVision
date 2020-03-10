@@ -45,3 +45,4 @@ def plot_whole():
 
 
 plot_whole()
+plot_segments()

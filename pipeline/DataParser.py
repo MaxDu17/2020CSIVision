@@ -1,7 +1,7 @@
 import numpy as np
 from os import listdir
 from pipeline.ProjectUtility import Utility
-masterdirectory = "../datasets_bigbedroom"
+masterdirectory = "../datasets_downstairs"
 class DataParser(Utility):
 
     def __init__(self):
