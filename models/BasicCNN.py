@@ -17,7 +17,7 @@ DP = DataParser()
 
 
 
-version = "DownstairsCNN_" + HYP.MODE_OF_LEARNING
+version = "BasicCNN2_" + HYP.MODE_OF_LEARNING
 
 weight_bias_list = list() #this is the weights and biases matrix
 
@@ -88,7 +88,12 @@ def Big_Train():
     optimizer = tf.keras.optimizers.Adam(learning_rate = HYP.LEARNING_RATE) #can use a changing learning rate
     loss_function = tf.keras.losses.CategoricalCrossentropy()
 
-
+    try:
+        os.mkdir(base_directory + "plugins/profile")
+        print("made directory {}".format(base_directory + "plugins/profile"))  # this can only go one layer deep
+    except:
+        print("directory exists!")
+        pass
     summary_writer = tf.summary.create_file_writer(logdir=base_directory)
     print("starting training")
 
@@ -107,7 +112,7 @@ def Big_Train():
     tf.summary.trace_on(graph=True, profiler=True)
 
 
-    for epoch in range(1001):
+    for epoch in range(501):
         data, label = DM.next_epoch_batch()
 
 

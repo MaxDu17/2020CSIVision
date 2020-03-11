@@ -1,7 +1,7 @@
 import numpy as np
 from os import listdir
 from pipeline.ProjectUtility import Utility
-masterdirectory = "../datasets_downstairs"
+masterdirectory = "../datasets"
 class DataParser(Utility):
 
     def __init__(self):
@@ -9,7 +9,8 @@ class DataParser(Utility):
         self.amparr = list()
         self.masteramparr = {}
 
-        files = listdir(masterdirectory)
+        files = sorted(listdir(masterdirectory))
+
         for file in files:
             if file.find(".") < 0:
                 try:
