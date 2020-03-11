@@ -79,6 +79,12 @@ class LiveParser(Utility):
         else:
             raise Exception("Invalid chunkIdentifier")
 
+    def process_from_raw_arbi(self, data, start): #makes the largest square matrix possible
+        carrier = list()
+        for value in data:
+            carrier.append(value[start: start + len(data)])
+        return carrier
+
 
 
     def return_chunkIdent_name(self, chunkIdentifier):

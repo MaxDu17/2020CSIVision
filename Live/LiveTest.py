@@ -65,8 +65,8 @@ def main(model):
             if len(holdinglist) == buffer_size:
                 print("This is happening")
                 feed_in = LiveHelp.process_from_raw(holdinglist, HYP.MODE_OF_LEARNING)
-                feed_in = np.reshape(feed_in, [LiveHelp.return_size_name(HYP.MODE_OF_LEARNING),
-                                      LiveHelp.return_size_name(HYP.MODE_OF_LEARNING),1,1])
+                feed_in = np.reshape(feed_in, [1, LiveHelp.return_size_name(HYP.MODE_OF_LEARNING),
+                                      LiveHelp.return_size_name(HYP.MODE_OF_LEARNING),1])
                 runNet(feed_in, model)
                 holdinglist = list()
 
@@ -75,6 +75,7 @@ def main(model):
 class Model():
     def __init__(self):
         pool_size = (int(LiveHelp.return_size_name(HYP.MODE_OF_LEARNING) / 4) + 1) ** 2 * 8
+        print(pool_size)
         self.cnn_1 = Convolve(weight_bias_list, [3, 3, 1, 4], "Layer_1_CNN")
         self.cnn_2 = Convolve(weight_bias_list, [3, 3, 4, 4], "Layer_2_CNN")
         self.pool_1 = Pool()
@@ -104,10 +105,15 @@ class Model():
     def call(self, input):
         print("I am in calling {}".format(np.shape(input)))
         x = self.cnn_1.call(input)
+
         x = self.cnn_2.call(x)
+
         x = self.pool_1.call(x)
+
         x = self.cnn_3.call(x)
+
         x = self.pool_2.call(x)
+
 
         x = self.flat.call(x)
         x = self.fc_1.call(x)
@@ -122,7 +128,8 @@ def makeNet():
 
 def runNet(inVal, model):
     prediction = model.call(inVal)
-    print("This is what the predicted value is: " + LiveHelp.result_interpret(prediction))
+    print("This is what the predicted value is: " + LiveHelp.result_interpret(prediction) + "and here is the softmax: "
+          + prediction)
 
 
 
