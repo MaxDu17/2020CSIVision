@@ -14,7 +14,7 @@ HYP = Hyperparameters()
 LiveHelp = LiveParser()
 
 
-version = "DownstairsCNN_" + HYP.MODE_OF_LEARNING
+version = "BasicCNN_" + HYP.MODE_OF_LEARNING
 
 weight_bias_list = list() #this is the weights and biases matrix
 
@@ -32,7 +32,7 @@ except:
     quit()
 
 
-def main():
+def main(model):
     holdinglist = list()
     semantic = int(input("How many seconds do you want to wait for?"))
     time.sleep(semantic)
@@ -58,12 +58,17 @@ def main():
 
 
         if(frame):
-            print("\t Frame Recorded")
+            idle_counter = 0
+            print("\t Frame Recorded" + str(len(holdinglist)))
             holdinglist.append(frame.amplitude)
 
             if len(holdinglist) == buffer_size:
+                print("This is happening")
                 feed_in = LiveHelp.process_from_raw(holdinglist, HYP.MODE_OF_LEARNING)
-                runNet(feed_in)
+                feed_in = np.reshape(feed_in, [LiveHelp.return_size_name(HYP.MODE_OF_LEARNING),
+                                      LiveHelp.return_size_name(HYP.MODE_OF_LEARNING),1,1])
+                runNet(feed_in, model)
+                holdinglist = list()
 
 
 
@@ -117,11 +122,12 @@ def makeNet():
 
 def runNet(inVal, model):
     prediction = model.call(inVal)
-    print("This is what the predicted value is: " + )
+    print("This is what the predicted value is: " + LiveHelp.result_interpret(prediction))
 
 
 
 
 
 if __name__ == "__main__":
-    main()
+    model = makeNet()
+    main(model)

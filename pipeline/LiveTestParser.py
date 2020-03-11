@@ -109,5 +109,6 @@ class LiveParser(Utility):
         return size
 
     def result_interpret(self, oneHot):
-        dictWhole = {}
+        dictWhole = {0: "Ambient", 1: "Fall", 2: "Sleep", 3: "Walk", 4: "Work" }
+        return dictWhole[np.argmax(oneHot)]
 
