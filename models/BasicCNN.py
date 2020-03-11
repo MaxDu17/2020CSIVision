@@ -30,7 +30,7 @@ except:
     pass
 
 logger = Logging(base_directory, 20, 20, 100) #makes logging object
-pool_size = (int(DP.return_size_name(HYP.MODE_OF_LEARNING)/4) + 1)**2 * 8
+pool_size = (int(DP.return_size_name(HYP.MODE_OF_LEARNING)/4 + 0.5))**2 * 8
 class Model():
     def __init__(self, DM):
         self.cnn_1 = Convolve(weight_bias_list, [3, 3, 1, 4], "Layer_1_CNN")
@@ -88,12 +88,7 @@ def Big_Train():
     optimizer = tf.keras.optimizers.Adam(learning_rate = HYP.LEARNING_RATE) #can use a changing learning rate
     loss_function = tf.keras.losses.CategoricalCrossentropy()
 
-    try:
-        os.mkdir(base_directory + "plugins/profile")
-        print("made directory {}".format(base_directory + "plugins/profile"))  # this can only go one layer deep
-    except:
-        print("directory exists!")
-        pass
+
     summary_writer = tf.summary.create_file_writer(logdir=base_directory)
     print("starting training")
 
@@ -109,7 +104,7 @@ def Big_Train():
         model.build_model()
 
 
-    tf.summary.trace_on(graph=True, profiler=True)
+    tf.summary.trace_on(graph=True, profiler=False)
 
 
     for epoch in range(501):
