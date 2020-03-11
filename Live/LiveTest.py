@@ -50,8 +50,8 @@ def main(model):
         frame = tool.extract_and_store(s)
         idle_counter += 1
 
-        #print(s)
-        if(idle_counter > 8):
+        print(s)
+        if(idle_counter > 16):
             ser.close()
             ser.open()
             print("******************I just reset the serial connection*******************")
@@ -128,8 +128,8 @@ def makeNet():
 
 def runNet(inVal, model):
     prediction = model.call(inVal)
-    print("This is what the predicted value is: " + LiveHelp.result_interpret(prediction) + "and here is the softmax: "
-          + prediction)
+    print("This is what the predicted value is: " + LiveHelp.result_interpret(prediction) + " and here is the softmax: "
+          + str(np.asarray(prediction)))
 
 
 
