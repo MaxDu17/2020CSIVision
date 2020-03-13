@@ -35,10 +35,12 @@ class DataParser(Utility):
                 if file.find(".") < 0:
                     try:
                         masteramparr[file] = self.getAmpArr(file)
+                        print(largeDirectory + "/" +  file)
                         self.datasetList.append(file)
                     except:
                         print(file + " was empty. I skipped it")
             self.superList.append(masteramparr)
+
 
     def get_meta(self):
         return self.datasetList
@@ -121,22 +123,23 @@ class DataParser(Utility):
                 data[i][j] = (data[i][j]- min_)/(max_-min_)
         return data
 
+    '''
     def load_data(self, datafile): #must call at first
         assert datafile in self.datasetList, "your file does not exist"
         try:
             self.amparr = self.masteramparr[datafile]
         except:
             raise Exception("Unable to load the filename specified")
-
     '''
-    def load_data_multiple_file(self, dataName, dataFile): #must call at first
-        assert dataName in self.hugeList[dataFile], "your file does not exist"
+
+    def load_data_multiple_file(self, dataName, count): #must call at first
+        assert dataName in self.superList[count], "your file does not exist"
         try:
-            self.amparr = self.masteramparr[datafile]
+            self.amparr = self.superList[count][dataName]
         except:
             raise Exception("Unable to load the filename specified")
             
-    '''
+
 
     def get_data(self, start, end, chunkIdentifier):
         assert len(self.amparr) > 0, "you did not load any data"
@@ -246,11 +249,13 @@ class DataParser(Utility):
 
         return size
 
+    '''
     def return_each_dataset_size(self):
         carrier = {}
         for key, value in self.masteramparr.items():
             carrier[key] = len(value)
         return carrier
+    '''
 
     def test(self):
         self.load_data("BedroomWork")

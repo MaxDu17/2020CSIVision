@@ -12,7 +12,6 @@ class DatasetMaker():
 
 
         self.labels = self.dp.get_meta()
-        self.sizes = self.dp.return_each_dataset_size()
 
         self.size_of_sample = self.dp.return_size_name(self.hyp.MODE_OF_LEARNING)
         self.chunkIdentifier = self.dp.return_chunkIdent_name(self.hyp.MODE_OF_LEARNING)
@@ -101,44 +100,47 @@ class DatasetMaker():
     def make_valid_set(self):
         self.valid_set_data = list()
         self.valid_set_labels = list()
-        for label in self.labels:
-            self.dp.load_data(label)
-            for i in range(self.hyp.VALIDATION_NUMBER):
-                data = self.dp.get_square_data_norm(i + self.validation_start, self.chunkIdentifier)
-                one_hot = self.make_one_hot(label)
-                self.valid_set_data.append(data)
-                self.valid_set_labels.append(one_hot)
-                #self.valid_set.append(DataPipeline(data= data, label = label, oneHot = one_hot, startIndex = i + self.validation_start))
+        for j in range(3):
+            for label in self.labels:
+                self.dp.load_data_multiple_file(label, j)
+                for i in range(self.hyp.VALIDATION_NUMBER):
+                    data = self.dp.get_square_data_norm(i + self.validation_start, self.chunkIdentifier)
+                    one_hot = self.make_one_hot(label)
+                    self.valid_set_data.append(data)
+                    self.valid_set_labels.append(one_hot)
+                    #self.valid_set.append(DataPipeline(data= data, label = label, oneHot = one_hot, startIndex = i + self.validation_start))
         assert len(self.valid_set_data) == len(self.valid_set_labels), "problem with valid set implementation"
 
 
     def make_test_set(self):
         self.test_set_data = list()
         self.test_set_labels = list()
-
-        for label in self.labels: #each label
-            self.dp.load_data(label)
-            for i in range(self.hyp.TEST_NUMBER):
-                data = self.dp.get_square_data_norm(i + self.test_start, self.chunkIdentifier)
-                one_hot = self.make_one_hot(label)
-                self.test_set_data.append(data)
-                self.test_set_labels.append(one_hot)
-                #self.test_set_struct.append(DataPipeline(data=data, label=label, oneHot=one_hot, startIndex=i + self.test_start))
+        for j in range(3):
+            for label in self.labels: #each label
+                self.dp.load_data_multiple_file(label, j)
+                for i in range(self.hyp.TEST_NUMBER):
+                    data = self.dp.get_square_data_norm(i + self.test_start, self.chunkIdentifier)
+                    one_hot = self.make_one_hot(label)
+                    self.test_set_data.append(data)
+                    self.test_set_labels.append(one_hot)
+                    #self.test_set_struct.append(DataPipeline(data=data, label=label, oneHot=one_hot, startIndex=i + self.test_start))
         assert len(self.test_set_data) == len(self.test_set_labels), "problem with test set implementation"
 
     def make_train_set(self): #not done
         self.train_set_data = list()
         self.train_set_labels = list()
-        for label in self.labels: #each label
-            self.dp.load_data(label)
-            size = self.dp.get_size()
-            print("\tTrain set on label: " + str(label))
-            for i in range(size - (self.test_start + self.hyp.TEST_NUMBER + self.size_of_sample)): #use the remainder
-                data = self.dp.get_square_data_norm(i + self.test_start, self.chunkIdentifier)
-                one_hot = self.make_one_hot(label)
-                self.train_set_data.append(data)
-                self.train_set_labels.append(one_hot)
-                #self.train_set.append(DataPipeline(data=data, label=label, oneHot=one_hot, startIndex = i + self.test_start))
+        for j in range(3):
+            for label in self.labels: #each label
+                self.dp.load_data_multiple_file(label, j)
+                size = self.dp.get_size()
+                print("\tTrain set on label: " + str(label) + " and file " + str(j))
+                
+                for i in range(size - (self.test_start + self.hyp.TEST_NUMBER + self.size_of_sample)): #use the remainder
+                    data = self.dp.get_square_data_norm(i + self.test_start, self.chunkIdentifier)
+                    one_hot = self.make_one_hot(label)
+                    self.train_set_data.append(data)
+                    self.train_set_labels.append(one_hot)
+                    #self.train_set.append(DataPipeline(data=data, label=label, oneHot=one_hot, startIndex = i + self.test_start))
         assert len(self.train_set_data) == len(self.train_set_labels), "problem with train set implementation"
 
     def num_labels(self):
@@ -197,11 +199,6 @@ class DatasetMaker():
 
             self.dp.save_image(self.dp.frame_normalize_minmax_image(self.test_set_data[i]), temppath + ".jpg", "L")
             print(temppath)
-'''
-k = DatasetMaker()
-k._debug_export_test_set()
-'''
-
 
 
 
