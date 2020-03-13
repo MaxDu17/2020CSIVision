@@ -41,6 +41,8 @@ class DataParser(Utility):
                         print(file + " was empty. I skipped it")
             self.superList.append(masteramparr)
 
+        self.datasetList = list(dict.fromkeys(self.datasetList)) #removes duplicates
+
 
     def get_meta(self):
         return self.datasetList

@@ -134,13 +134,13 @@ class DatasetMaker():
                 self.dp.load_data_multiple_file(label, j)
                 size = self.dp.get_size()
                 print("\tTrain set on label: " + str(label) + " and file " + str(j))
-                
+
                 for i in range(size - (self.test_start + self.hyp.TEST_NUMBER + self.size_of_sample)): #use the remainder
                     data = self.dp.get_square_data_norm(i + self.test_start, self.chunkIdentifier)
                     one_hot = self.make_one_hot(label)
                     self.train_set_data.append(data)
                     self.train_set_labels.append(one_hot)
-                    #self.train_set.append(DataPipeline(data=data, label=label, oneHot=one_hot, startIndex = i + self.test_start))
+
         assert len(self.train_set_data) == len(self.train_set_labels), "problem with train set implementation"
 
     def num_labels(self):
