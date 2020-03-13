@@ -2,8 +2,10 @@ import numpy as np
 from os import listdir
 from pipeline.ProjectUtility import Utility
 masterdirectory = "../datasets"
-class DataParser(Utility):
 
+directoryList = ["../datasets", "../datasets_bigbedroom", "../datasets_downstairs"]
+class DataParser(Utility):
+    ''' #thisis for single-file deployment
     def __init__(self):
         self.datasetList = list()
         self.amparr = list()
@@ -18,6 +20,25 @@ class DataParser(Utility):
                     self.datasetList.append(file)
                 except:
                     print(file + " was empty. I skipped it")
+    '''
+
+    def __init__(self):
+        self.datasetList = list()
+        self.amparr = list()
+        self.superList = list() #this will contain dictionasries for each directory
+
+        for largeDirectory in directoryList:
+            masteramparr = {}
+            files = sorted(listdir(largeDirectory))
+
+            for file in files:
+                if file.find(".") < 0:
+                    try:
+                        masteramparr[file] = self.getAmpArr(file)
+                        self.datasetList.append(file)
+                    except:
+                        print(file + " was empty. I skipped it")
+            self.superList.append(masteramparr)
 
     def get_meta(self):
         return self.datasetList
@@ -25,8 +46,8 @@ class DataParser(Utility):
     def getAmpArr(self, dataset):
         return self.csv_file_to_amp(masterdirectory + "/" + dataset + "/" + dataset + "_amplitude.csv")
 
-    def getMasterAmpArr(self):
-        return self.masteramparr
+    def getMasterAmpArr(self, fileDirectory):
+        return self.superList[fileDirectory]
 
     def get_size(self):
         if len(self.amparr) == 0:
@@ -77,6 +98,13 @@ class DataParser(Utility):
 
         return newData
 
+    def arbi_chunk(self, data, start, size):
+        newData = list()
+        for frame in data:
+            carrier = frame[start: start + size]
+            newData.append(carrier)
+        return newData
+
     def normalize_single_column(self, data):
         min_ = min(data)
         max_ = max(data)
@@ -100,6 +128,16 @@ class DataParser(Utility):
         except:
             raise Exception("Unable to load the filename specified")
 
+    '''
+    def load_data_multiple_file(self, dataName, dataFile): #must call at first
+        assert dataName in self.hugeList[dataFile], "your file does not exist"
+        try:
+            self.amparr = self.masteramparr[datafile]
+        except:
+            raise Exception("Unable to load the filename specified")
+            
+    '''
+
     def get_data(self, start, end, chunkIdentifier):
         assert len(self.amparr) > 0, "you did not load any data"
 
@@ -122,16 +160,25 @@ class DataParser(Utility):
         else:
             raise Exception("Invalid chunkIdentifier")
 
+    def get_data_arbi(self, start_time, end, start_vert, size):
+        assert len(self.amparr) > 0, "you did not load any data"
+
+        if start_time > len(self.amparr) or end > len(self.amparr):
+            print(str(start_time) + "\t" + str(end))
+            print(len(self.amparr))
+            raise Exception("You overshot on your array access")
+
+        carrier = self.amparr[start_time:end]
+
+        return self.arbi_chunk(carrier, start_vert, size)
+
     def get_square_data(self, start, chunkIdentifier):
         size = 0
         if chunkIdentifier == 1:
-            size = 54
             size = 52
         elif chunkIdentifier == 2:
-            size = 59
             size = 57
         elif chunkIdentifier == 3:
-            size = 59
             size = 57
         elif chunkIdentifier == 4:
             size = 166
@@ -140,11 +187,20 @@ class DataParser(Utility):
 
         return self.get_data(start, start + size, chunkIdentifier)
 
+
+
+
+    def get_square_data_arbi(self, start, size, start_vert):
+        return self.get_data_arbi(start, start + size, start_vert, size)
+
     def get_square_data_norm(self, start, chunkIdentifier):
         return self.normalize(self.get_square_data(start, chunkIdentifier))
 
     def get_data_norm(self, start, end, chunkIdentifier):
-        return self.normalize(self.get_data(start, end, chunkIdentifier))\
+        return self.normalize(self.get_data(start, end, chunkIdentifier))
+
+    def get_square_data_arbi_norm(self, start, size, start_vert):
+        return self.normalize(self.get_square_data_arbi(start, size, start_vert))
 
 
 
@@ -204,16 +260,13 @@ class DataParser(Utility):
         self.plot(self.get_square_data_norm(0, 1))
         self.plot(self.get_square_data_norm(0, 0))
 
+
 '''
 k = DataParser()
 k.load_data("BedroomAmbient")
 
-k.plot(k.get_square_data_norm(0, 4))
-k.plot(k.get_square_data_norm(0, 3))
-k.plot(k.get_square_data_norm(0, 2))
-k.plot(k.get_square_data_norm(0, 1))
-k.plot(k.get_square_data_norm(0, 0))
+k.plot(k.get_square_data_arbi_norm(0, 192, 0))
+k.plot(k.get_square_data_norm(0,0))
 '''
-
 
 
