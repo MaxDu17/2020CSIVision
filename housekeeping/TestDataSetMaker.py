@@ -1,10 +1,11 @@
 from pipeline.DatasetMaker import DatasetMaker
 from pipeline.ProjectUtility import Utility
+from pipeline.DataParser  import DataParser
 from pipeline.DataPipeline import DataPipeline
 import numpy as np
 
-
-DM = DatasetMaker()
+DP  = DataParser()
+DM = DatasetMaker(DP)
 tool = Utility()
 
 data, label = DM.next_epoch_batch()

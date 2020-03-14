@@ -6,7 +6,7 @@ from pipeline.Hyperparameters import Hyperparameters
 
 class DatasetMaker():
 
-    def __init__(self, dataparser_obj):
+    def __init__(self, dataparser_obj, start, size):
         self.dp = dataparser_obj
         self.hyp = Hyperparameters()
 
@@ -27,11 +27,11 @@ class DatasetMaker():
         self.valid_count = 0
         self.test_count = 0
         print("making validation set")
-        self.make_valid_set()
+        self.make_valid_set(start, size)
         print("making test set")
-        self.make_test_set()
+        self.make_test_set(start, size)
         print("making train set")
-        self.make_train_set()
+        self.make_train_set(start, size)
 
 
 
@@ -97,14 +97,14 @@ class DatasetMaker():
                                      [self.hyp.TEST_NUMBER*self.num_labels()*len(self.dp.superList), self.size_of_sample, self.size_of_sample, 1])
         return returnable_data, self.test_set_labels
 
-    def make_valid_set(self):
+    def make_valid_set(self, start, size):
         self.valid_set_data = list()
         self.valid_set_labels = list()
         for j in range(len(self.dp.superList)):
             for label in self.labels:
                 self.dp.load_data_multiple_file(label, j)
                 for i in range(self.hyp.VALIDATION_NUMBER):
-                    data = self.dp.get_square_data_norm(i + self.validation_start, self.chunkIdentifier)
+                    data = self.dp.get_square_data_arbi_norm(start = i + self.validation_start, size = size, start_vert=start)
                     one_hot = self.make_one_hot(label)
                     self.valid_set_data.append(data)
                     self.valid_set_labels.append(one_hot)
@@ -112,33 +112,32 @@ class DatasetMaker():
         assert len(self.valid_set_data) == len(self.valid_set_labels), "problem with valid set implementation"
 
 
-    def make_test_set(self):
+    def make_test_set(self, start, size):
         self.test_set_data = list()
         self.test_set_labels = list()
         for j in range(len(self.dp.superList)):
             for label in self.labels: #each label
                 self.dp.load_data_multiple_file(label, j)
                 for i in range(self.hyp.TEST_NUMBER):
-                    data = self.dp.get_square_data_norm(i + self.test_start, self.chunkIdentifier)
+                    data = self.dp.get_square_data_norm(start = i + self.test_start, size = size, start_vert = start)
                     one_hot = self.make_one_hot(label)
                     self.test_set_data.append(data)
                     self.test_set_labels.append(one_hot)
                     #self.test_set_struct.append(DataPipeline(data=data, label=label, oneHot=one_hot, startIndex=i + self.test_start))
         assert len(self.test_set_data) == len(self.test_set_labels), "problem with test set implementation"
 
-    def make_train_set(self): #not done
+    def make_train_set(self, start, size): #not done
         self.train_set_data = list()
         self.train_set_labels = list()
         for j in range(len(self.dp.superList)):
-
             for label in self.labels: #each label
                 self.dp.load_data_multiple_file(label, j)
                 size = self.dp.get_size()
                 print("\tTrain set on label: " + str(label) + " and file " + str(j))
 
-                for i in range(size - (self.test_start + self.hyp.TEST_NUMBER + 2*self.size_of_sample)): #use the remainder
-                    #print("\tcalling number: " + str(i) + "out of " + str(size - (self.test_start + self.hyp.TEST_NUMBER + self.size_of_sample)))
-                    data = self.dp.get_square_data_norm(i + self.train_start, self.chunkIdentifier)
+                for i in range(size - (self.test_start + self.hyp.TEST_NUMBER + self.size_of_sample) - 1): #use the remainder
+                    print("calling: " + str(i))
+                    data = self.dp.get_square_data_norm(start = i + self.test_start,)
                     one_hot = self.make_one_hot(label)
                     self.train_set_data.append(data)
                     self.train_set_labels.append(one_hot)

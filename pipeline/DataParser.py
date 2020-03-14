@@ -135,6 +135,7 @@ class DataParser(Utility):
     '''
 
     def load_data_multiple_file(self, dataName, count): #must call at first
+        self.current_name = dataName
         assert dataName in self.superList[count], "your file does not exist"
         try:
             self.amparr = self.superList[count][dataName]
@@ -147,6 +148,7 @@ class DataParser(Utility):
         assert len(self.amparr) > 0, "you did not load any data"
 
         if start > len(self.amparr) or end > len(self.amparr):
+            print("OOPS")
             print(str(start) + "\t" + str(end))
             print(len(self.amparr))
             raise Exception("You overshot on your array access")
@@ -199,6 +201,7 @@ class DataParser(Utility):
         return self.get_data_arbi(start, start + size, start_vert, size)
 
     def get_square_data_norm(self, start, chunkIdentifier):
+        #print("this is what i'm getting: " + str(start) + "at " + str(self.current_name))
         return self.normalize(self.get_square_data(start, chunkIdentifier))
 
     def get_data_norm(self, start, end, chunkIdentifier):
