@@ -3,17 +3,26 @@
 import seaborn as sn
 import matplotlib.pyplot as plt
 import pandas as pd
-from pipeline.ProjectUtility import Utility
-from pipeline.Hyperparameters import Hyperparameters
+import csv
 
-HYP = Hyperparameters()
-Util = Utility()
-version = "AllDataCNN_" + HYP.MODE_OF_LEARNING
+
+
+def cast_csv_to_float(file_object):  # this takes a file object csv and returns a matrix
+    logger = csv.reader(file_object)
+    matrix = list(logger)
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            matrix[i][j] = float(matrix[i][j])
+    return matrix
+
+
+
+version = "AllDataCNN_third"
 
 base_directory = "../Graphs_and_Results/Vanilla" + "/" + version + "/confusion.csv"
 
 test = open(base_directory, "r")
-matrix = Util.cast_csv_to_float(test)
+matrix = cast_csv_to_float(test)
 
 df_cm = pd.DataFrame(matrix, range(5), range(5))
 plt.figure(figsize=(10,7))
