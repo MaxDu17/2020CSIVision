@@ -6,8 +6,8 @@ from pipeline.Hyperparameters import Hyperparameters
 
 class DatasetMaker():
 
-    def __init__(self):
-        self.dp = DataParser()
+    def __init__(self, dataparser_obj):
+        self.dp = dataparser_obj
         self.hyp = Hyperparameters()
 
 
@@ -79,7 +79,7 @@ class DatasetMaker():
 
     def valid_batch(self):
         returnable_data = np.reshape(self.valid_set_data,
-                                     [self.hyp.VALIDATION_NUMBER*self.num_labels(), self.size_of_sample, self.size_of_sample, 1])
+                                     [self.hyp.VALIDATION_NUMBER*self.num_labels()*len(self.dp.superList), self.size_of_sample, self.size_of_sample, 1])
         return returnable_data, self.valid_set_labels
 
     def new_test(self):
@@ -94,13 +94,13 @@ class DatasetMaker():
 
     def test_batch(self):
         returnable_data = np.reshape(self.test_set_data,
-                                     [self.hyp.TEST_NUMBER*self.num_labels(), self.size_of_sample, self.size_of_sample, 1])
+                                     [self.hyp.TEST_NUMBER*self.num_labels()*len(self.dp.superList), self.size_of_sample, self.size_of_sample, 1])
         return returnable_data, self.test_set_labels
 
     def make_valid_set(self):
         self.valid_set_data = list()
         self.valid_set_labels = list()
-        for j in range(3):
+        for j in range(len(self.dp.superList)):
             for label in self.labels:
                 self.dp.load_data_multiple_file(label, j)
                 for i in range(self.hyp.VALIDATION_NUMBER):
@@ -115,7 +115,7 @@ class DatasetMaker():
     def make_test_set(self):
         self.test_set_data = list()
         self.test_set_labels = list()
-        for j in range(3):
+        for j in range(len(self.dp.superList)):
             for label in self.labels: #each label
                 self.dp.load_data_multiple_file(label, j)
                 for i in range(self.hyp.TEST_NUMBER):
@@ -129,7 +129,7 @@ class DatasetMaker():
     def make_train_set(self): #not done
         self.train_set_data = list()
         self.train_set_labels = list()
-        for j in range(3):
+        for j in range(len(self.dp.superList)):
             for label in self.labels: #each label
                 self.dp.load_data_multiple_file(label, j)
                 size = self.dp.get_size()

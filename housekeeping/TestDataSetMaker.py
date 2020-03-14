@@ -17,6 +17,6 @@ print("The training set starts at (universal): " + str(DM.train_start))
 
 print("This is the number of frames for training: " + str(DM._debug_get_train_size()))
 print(np.shape(data))
-print(data)
+#print(data)
 print(np.shape(label))
-print(label)
+#print(label)

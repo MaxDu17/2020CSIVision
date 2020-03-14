@@ -17,7 +17,7 @@ DP = DataParser()
 
 
 
-version = "BasicCNN2_" + HYP.MODE_OF_LEARNING
+version = "AllDataCNN_" + HYP.MODE_OF_LEARNING
 
 weight_bias_list = list() #this is the weights and biases matrix
 
@@ -30,7 +30,7 @@ except:
     pass
 
 logger = Logging(base_directory, 20, 20, 100) #makes logging object
-pool_size = (int(DP.return_size_name(HYP.MODE_OF_LEARNING)/4 + 0.5))**2 * 8
+pool_size = (int(DP.return_size_name(HYP.MODE_OF_LEARNING)/4.0 + 0.99))**2 * 8
 class Model():
     def __init__(self, DM):
         self.cnn_1 = Convolve(weight_bias_list, [3, 3, 1, 4], "Layer_1_CNN")
@@ -83,7 +83,7 @@ def Big_Train():
     print("*****************Training*****************")
 
     print("loading dataset")
-    DM = DatasetMaker()
+    DM = DatasetMaker(DP)
 
     optimizer = tf.keras.optimizers.Adam(learning_rate = HYP.LEARNING_RATE) #can use a changing learning rate
     loss_function = tf.keras.losses.CategoricalCrossentropy()
