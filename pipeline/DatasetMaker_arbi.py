@@ -4,7 +4,7 @@ import random
 from pipeline.Hyperparameters import Hyperparameters
 #from pipeline.DataPipeline import DataPipeline
 
-class DatasetMaker():
+class DatasetMaker_Arbi():
 
     def __init__(self, dataparser_obj, start, size):
         self.dp = dataparser_obj
@@ -119,28 +119,31 @@ class DatasetMaker():
             for label in self.labels: #each label
                 self.dp.load_data_multiple_file(label, j)
                 for i in range(self.hyp.TEST_NUMBER):
-                    data = self.dp.get_square_data_norm(start = i + self.test_start, size = size, start_vert = start)
+                    data = self.dp.get_square_data_arbi_norm(start = i + self.test_start, size = size, start_vert = start)
                     one_hot = self.make_one_hot(label)
                     self.test_set_data.append(data)
                     self.test_set_labels.append(one_hot)
                     #self.test_set_struct.append(DataPipeline(data=data, label=label, oneHot=one_hot, startIndex=i + self.test_start))
         assert len(self.test_set_data) == len(self.test_set_labels), "problem with test set implementation"
 
+
     def make_train_set(self, start, size): #not done
         self.train_set_data = list()
         self.train_set_labels = list()
         for j in range(len(self.dp.superList)):
+
             for label in self.labels: #each label
                 self.dp.load_data_multiple_file(label, j)
                 size = self.dp.get_size()
                 print("\tTrain set on label: " + str(label) + " and file " + str(j))
 
-                for i in range(size - (self.test_start + self.hyp.TEST_NUMBER + self.size_of_sample) - 1): #use the remainder
-                    print("calling: " + str(i))
-                    data = self.dp.get_square_data_norm(start = i + self.test_start,)
+                for i in range(size - (self.test_start + self.hyp.TEST_NUMBER + 2*self.size_of_sample)): #use the remainder
+                    #print("\tcalling number: " + str(i) + "out of " + str(size - (self.test_start + self.hyp.TEST_NUMBER + self.size_of_sample)))
+                    data = self.dp.get_square_data_arbi_norm(i + self.train_start, size = size, start_vert = start)
                     one_hot = self.make_one_hot(label)
                     self.train_set_data.append(data)
                     self.train_set_labels.append(one_hot)
+
 
         assert len(self.train_set_data) == len(self.train_set_labels), "problem with train set implementation"
 

@@ -10,18 +10,18 @@ import pickle
 
 from pipeline.MyCNNLibrary import * #this is my own "keras" extension onto tensorflow
 from pipeline.Hyperparameters import Hyperparameters
-from pipeline.DatasetMaker import DatasetMaker
+from pipeline.DatasetMaker_arbi import DatasetMaker_Arbi
 from pipeline.DataParser import DataParser
 HYP = Hyperparameters()
 DP = DataParser()
 
 
 
-version = "AllDataCNN_" + HYP.MODE_OF_LEARNING
+version = "AllDataCNN_" + str(HYP.START) + "_" + (HYP.SIZE)
 
 weight_bias_list = list() #this is the weights and biases matrix
 
-base_directory = "../Graphs_and_Results/Vanilla" + "/" + version + "/"
+base_directory = "../Graphs_and_Results/Arbi" + "/" + version + "/"
 try:
     os.mkdir(base_directory)
     print("made directory {}".format(base_directory)) #this can only go one layer deep
@@ -30,7 +30,7 @@ except:
     pass
 
 logger = Logging(base_directory, 20, 20, 100) #makes logging object
-pool_size = (int(DP.return_size_name(HYP.MODE_OF_LEARNING)/4.0 + 0.99))**2 * 8
+pool_size = (int(HYP.SIZE/4.0 + 0.99))**2 * 8
 class Model():
     def __init__(self, DM):
         self.cnn_1 = Convolve(weight_bias_list, [3, 3, 1, 4], "Layer_1_CNN")
@@ -83,7 +83,7 @@ def Big_Train():
     print("*****************Training*****************")
 
     print("loading dataset")
-    DM = DatasetMaker(DP)
+    DM = DatasetMaker_Arbi(DP, HYP.START, HYP.SIZE)
 
     optimizer = tf.keras.optimizers.Adam(learning_rate = HYP.LEARNING_RATE) #can use a changing learning rate
     loss_function = tf.keras.losses.CategoricalCrossentropy()
@@ -160,7 +160,7 @@ def Test_live(model, datafeeder):
 
 def Test():
     print("Making model")
-    DM = DatasetMaker(DP)
+    DM = DatasetMaker_Arbi(DP, HYP.START, HYP.SIZE)
     model = Model(DM)
     model.build_model_from_pickle(base_directory + "SAVED_WEIGHTS.pkl")
 
