@@ -174,8 +174,8 @@ class DataParser(Utility):
             print(str(start_time) + "\t" + str(end))
             print(len(self.amparr))
             raise Exception("You overshot on your array access")
-
-        carrier = self.amparr[start_time:end]
+        carrier = self.remove_gaps(self.amparr[start_time:end])
+        #carrier = self.amparr[start_time:end]
 
         return self.arbi_chunk(carrier, start_vert, size)
 
@@ -198,6 +198,7 @@ class DataParser(Utility):
 
 
     def get_square_data_arbi(self, start, size, start_vert):
+        #print("\t" + str(start) + "------" + str(size))
         return self.get_data_arbi(start, start + size, start_vert, size)
 
     def get_square_data_norm(self, start, chunkIdentifier):

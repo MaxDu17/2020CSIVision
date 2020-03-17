@@ -273,9 +273,10 @@ def cast_csv_to_float(file_object):  # this takes a file object csv and returns 
 #MAIN function
 #
 if(__name__ == '__main__'):
-    version = "AllDataCNN_third"
+    NAME = "Arbi"
+    version = "AllDataCNN_50_20"
 
-    base_directory = "../Graphs_and_Results/Vanilla" + "/" + version + "/confusion.csv"
+    base_directory = "../Graphs_and_Results/"+ NAME + "/" + version + "/confusion.csv"
 
     test = open(base_directory, "r")
     matrix = cast_csv_to_float(test)

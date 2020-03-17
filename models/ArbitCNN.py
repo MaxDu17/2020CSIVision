@@ -17,7 +17,7 @@ DP = DataParser()
 
 
 
-version = "AllDataCNN_" + str(HYP.START) + "_" + (HYP.SIZE)
+version = "AllDataCNN_" + str(HYP.START) + "_" + str(HYP.SIZE)
 
 weight_bias_list = list() #this is the weights and biases matrix
 
@@ -107,7 +107,7 @@ def Big_Train():
     tf.summary.trace_on(graph=True, profiler=False)
 
 
-    for epoch in range(501):
+    for epoch in range(1001):
         data, label = DM.next_epoch_batch()
 
 

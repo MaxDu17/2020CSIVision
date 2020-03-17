@@ -13,8 +13,8 @@ class DatasetMaker_Arbi():
 
         self.labels = self.dp.get_meta()
 
-        self.size_of_sample = self.dp.return_size_name(self.hyp.MODE_OF_LEARNING)
-        self.chunkIdentifier = self.dp.return_chunkIdent_name(self.hyp.MODE_OF_LEARNING)
+        self.size_of_sample = size
+        self.chunkIdentifier = str(size)
 
         self.validation_start = 0
         self.test_start = self.hyp.VALIDATION_NUMBER + self.size_of_sample - 1
@@ -128,6 +128,7 @@ class DatasetMaker_Arbi():
 
 
     def make_train_set(self, start, size): #not done
+        size_ = size
         self.train_set_data = list()
         self.train_set_labels = list()
         for j in range(len(self.dp.superList)):
@@ -139,7 +140,8 @@ class DatasetMaker_Arbi():
 
                 for i in range(size - (self.test_start + self.hyp.TEST_NUMBER + 2*self.size_of_sample)): #use the remainder
                     #print("\tcalling number: " + str(i) + "out of " + str(size - (self.test_start + self.hyp.TEST_NUMBER + self.size_of_sample)))
-                    data = self.dp.get_square_data_arbi_norm(i + self.train_start, size = size, start_vert = start)
+                    #print("calling position number" + str(i) + "out of" + str(size - (self.test_start + self.hyp.TEST_NUMBER + 2*self.size_of_sample)))
+                    data = self.dp.get_square_data_arbi_norm(i + self.train_start, size = size_, start_vert = start)
                     one_hot = self.make_one_hot(label)
                     self.train_set_data.append(data)
                     self.train_set_labels.append(one_hot)
