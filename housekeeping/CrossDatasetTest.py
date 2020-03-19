@@ -17,8 +17,8 @@ HYP = Hyperparameters()
 DP = DataParser()
 
 name = "Vanilla"
-
-version = "BasicCNN_" + HYP.MODE_OF_LEARNING
+Cross = "bigbedroom"
+version = "DownstairsCNN_" + HYP.MODE_OF_LEARNING
 
 weight_bias_list = list() #this is the weights and biases matrix
 
@@ -93,7 +93,7 @@ def Test():
     print("This is the test set accuracy: {}".format(accuracy(predictions, label)))
     conf = logger.make_confusion_matrix(predictions, label)
 
-    test = open(base_directory + "confusionTest.csv", "w")
+    test = open(base_directory + "confusionTest" + Cross + ".csv", "w")
     logger_ = csv.writer(test, lineterminator="\n")
 
 
@@ -102,7 +102,7 @@ def Test():
 
     test.close()
 
-    ConfusionMatrixVisualizer(name = name, version = version, testTag="Test")
+    ConfusionMatrixVisualizer(name = name, version = version, testTag="Test" + Cross)
 
 
 def main():

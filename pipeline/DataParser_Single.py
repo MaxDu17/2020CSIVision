@@ -2,8 +2,8 @@ import numpy as np
 from os import listdir
 from pipeline.ProjectUtility import Utility
 
-masterdirectory = "../datasets"
-
+masterdirectory = "../datasets_bigbedroom"
+directoryList = ["../datasets", "../datasets_bigbedroom", "../datasets_downstairs"]
 
 class DataParser(Utility):
      #thisis for single-file deployment

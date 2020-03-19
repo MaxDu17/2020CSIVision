@@ -278,7 +278,7 @@ class ConfusionMatrixVisualizer():
         NAME = name
         version_ = version
 
-        base_directory = "../Graphs_and_Results/" + NAME + "/" + version_ + "/confusionTest_.csv"
+        base_directory = "../Graphs_and_Results/" + NAME + "/" + version_ + "/confusion" + testTag + ".csv"
 
         test = open(base_directory, "r")
         matrix = cast_csv_to_float(test)
