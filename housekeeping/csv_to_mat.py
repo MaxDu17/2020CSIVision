@@ -272,6 +272,26 @@ def cast_csv_to_float(file_object):  # this takes a file object csv and returns 
 #
 #MAIN function
 #
+
+class ConfusionMatrixVisualizer():
+    def __init__(self, name, version):
+        NAME = name
+        version_ = version
+
+        base_directory = "../Graphs_and_Results/" + NAME + "/" + version_ + "/confusion.csv"
+
+        test = open(base_directory, "r")
+        matrix = cast_csv_to_float(test)
+        matrix = np.transpose(matrix)
+        # get pandas dataframe
+        df_cm = DataFrame(matrix, ["Ambient", "Fall", "Sleep", "Walk", "Work"],
+                          ["Ambient", "Fall", "Sleep", "Walk", "Work"])
+        # colormap: see this and choose your more dear
+        cmap = 'PuRd'
+        pretty_plot_confusion_matrix(df_cm, cmap=cmap)
+
+
+
 if(__name__ == '__main__'):
     NAME = "Arbi"
     version = "AllDataCNN_50_20"

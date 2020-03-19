@@ -77,88 +77,7 @@ class Model():
         output = self.softmax.call(x)
         return output, l2
 
-def Big_Train():
 
-    print("Is there a GPU available: "),
-    print(tf.test.is_gpu_available())
-    print("*****************Training*****************")
-
-    print("loading dataset")
-    DM = DatasetMaker(DP)
-
-    optimizer = tf.keras.optimizers.Adam(learning_rate = HYP.LEARNING_RATE) #can use a changing learning rate
-    loss_function = tf.keras.losses.CategoricalCrossentropy()
-
-
-    summary_writer = tf.summary.create_file_writer(logdir=base_directory)
-    print("starting training")
-
-    print("Making model")
-    model = Model(DM)
-    try:
-        semantic = input("restore model? (y,n)")
-        if semantic == "y":
-            model.build_model_from_pickle(base_directory + "SAVED_WEIGHTS.pkl")
-        else:
-            model.build_model()
-    except:
-        model.build_model()
-
-
-    tf.summary.trace_on(graph=True, profiler=False)
-
-
-    for epoch in range(501):
-        data, label = DM.next_epoch_batch()
-
-
-        with tf.GradientTape() as tape:
-            predictions, l2_loss = model.call(data) #this is the big call
-
-            pred_loss = loss_function(label, predictions) #this is the loss function
-            pred_loss = pred_loss + HYP.L2WEIGHT * l2_loss #this implements lasso regularization
-
-            if epoch == 0: #creates graph
-                with summary_writer.as_default():
-                    tf.summary.trace_export(name="Graph", step=0, profiler_outdir=base_directory)
-
-            if epoch % 50 == 0: #takes care of validation accuracy
-                valid_accuracy = Validation(model, DM)
-                with summary_writer.as_default():
-                    logger.log_valid(valid_accuracy, epoch)
-
-            with summary_writer.as_default(): #this is the big player logger and printout
-                logger.log_train(epoch, predictions, label, pred_loss, l2_loss, weight_bias_list)
-
-        gradients = tape.gradient(pred_loss, weight_bias_list)
-        optimizer.apply_gradients(zip(gradients, weight_bias_list))
-
-    Test_live(model, DM)
-
-def Validation(model, datafeeder):
-    print("\n##############VALIDATION##############\n")
-
-    data, label = datafeeder.valid_batch()
-
-    predictions, l2loss = model.call(data)
-    assert len(label) == len(predictions)
-    valid_accuracy = accuracy(predictions, label)
-    print("This is the validation set accuracy: {}".format(valid_accuracy))
-    return valid_accuracy
-
-
-def Test_live(model, datafeeder):
-    print("\n##############TESTING##############\n")
-
-    data, label = datafeeder.test_batch()
-
-    predictions, l2loss = model.call(data)
-    logger.test_log(predictions, label)
-
-    print("This is the test set accuracy: {}".format(accuracy(predictions, label)))
-    right, wrong, wrong_index = record_error_with_labels(data, label, predictions)
-    ConfusionMatrixVisualizer(name=name, version=version)
-    return right, wrong, wrong_index
 
 def Test():
     print("Making model")
@@ -177,11 +96,7 @@ def Test():
 
 def main():
     print("Starting the program!")
-    query = input("What mode do you want? Train (t) or Test from model (m)?\n")
-    if query == "t":
-        Big_Train()
-    if query == "m":
-        Test()
+    Test()
 
 
 if __name__ == '__main__':
