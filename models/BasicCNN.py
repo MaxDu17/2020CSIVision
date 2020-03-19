@@ -157,7 +157,7 @@ def Test_live(model, datafeeder):
 
     print("This is the test set accuracy: {}".format(accuracy(predictions, label)))
     right, wrong, wrong_index = record_error_with_labels(data, label, predictions)
-    ConfusionMatrixVisualizer(name=name, version=version)
+    ConfusionMatrixVisualizer(name=name, version=version, testTag = "")
     return right, wrong, wrong_index
 
 def Test():
@@ -172,7 +172,7 @@ def Test():
     predictions, l2loss = model.call(data)
 
     print("This is the test set accuracy: {}".format(accuracy(predictions, label)))
-    ConfusionMatrixVisualizer(name = name, version = version)
+    ConfusionMatrixVisualizer(name = name, version = version, testTag = "")
 
 
 def main():

@@ -12,16 +12,17 @@ from pipeline.MyCNNLibrary import * #this is my own "keras" extension onto tenso
 from pipeline.Hyperparameters import Hyperparameters
 from pipeline.DatasetMaker_arbi import DatasetMaker_Arbi
 from pipeline.DataParser import DataParser
+from housekeeping.csv_to_mat import ConfusionMatrixVisualizer
 HYP = Hyperparameters()
 DP = DataParser()
 
 
-
+name = "Arbi"
 version = "AllDataCNN_" + str(HYP.START) + "_" + str(HYP.SIZE)
 
 weight_bias_list = list() #this is the weights and biases matrix
 
-base_directory = "../Graphs_and_Results/Arbi" + "/" + version + "/"
+base_directory = "../Graphs_and_Results/" + name  + "/" + version + "/"
 try:
     os.mkdir(base_directory)
     print("made directory {}".format(base_directory)) #this can only go one layer deep
@@ -156,6 +157,7 @@ def Test_live(model, datafeeder):
 
     print("This is the test set accuracy: {}".format(accuracy(predictions, label)))
     right, wrong, wrong_index = record_error_with_labels(data, label, predictions)
+    ConfusionMatrixVisualizer(name=name, version=version, testTag="")
     return right, wrong, wrong_index
 
 def Test():
@@ -170,6 +172,7 @@ def Test():
     predictions, l2loss = model.call(data)
 
     print("This is the test set accuracy: {}".format(accuracy(predictions, label)))
+    ConfusionMatrixVisualizer(name=name, version=version, testTag="")
 
 
 def main():

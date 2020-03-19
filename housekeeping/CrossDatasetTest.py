@@ -91,7 +91,18 @@ def Test():
     predictions, l2loss = model.call(data)
 
     print("This is the test set accuracy: {}".format(accuracy(predictions, label)))
-    ConfusionMatrixVisualizer(name = name, version = version)
+    conf = logger.make_confusion_matrix(predictions, label)
+
+    test = open(base_directory + "confusionTest.csv", "w")
+    logger_ = csv.writer(test, lineterminator="\n")
+
+
+    for iterate in conf:
+        logger_.writerow(iterate)
+
+    test.close()
+
+    ConfusionMatrixVisualizer(name = name, version = version, testTag="Test")
 
 
 def main():

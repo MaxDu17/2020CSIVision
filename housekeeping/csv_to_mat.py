@@ -274,11 +274,11 @@ def cast_csv_to_float(file_object):  # this takes a file object csv and returns 
 #
 
 class ConfusionMatrixVisualizer():
-    def __init__(self, name, version):
+    def __init__(self, name, version, testTag):
         NAME = name
         version_ = version
 
-        base_directory = "../Graphs_and_Results/" + NAME + "/" + version_ + "/confusion.csv"
+        base_directory = "../Graphs_and_Results/" + NAME + "/" + version_ + "/confusionTest_.csv"
 
         test = open(base_directory, "r")
         matrix = cast_csv_to_float(test)
