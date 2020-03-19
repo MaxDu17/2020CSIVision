@@ -4,8 +4,6 @@ from pipeline.ProjectUtility import Utility
 
 masterdirectory = "../datasets"
 
-directoryList = ["../datasets", "../datasets_bigbedroom", "../datasets_downstairs"]
-
 
 class DataParser(Utility):
      #thisis for single-file deployment

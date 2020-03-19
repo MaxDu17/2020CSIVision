@@ -10,15 +10,15 @@ import pickle
 
 from pipeline.MyCNNLibrary import * #this is my own "keras" extension onto tensorflow
 from pipeline.Hyperparameters import Hyperparameters
-from pipeline.DatasetMaker import DatasetMaker
-from pipeline.DataParser import DataParser
+from pipeline.DatasetMaker_Single_Test import DatasetMaker
+from pipeline.DataParser_Single import DataParser
 from housekeeping.csv_to_mat import ConfusionMatrixVisualizer
 HYP = Hyperparameters()
 DP = DataParser()
 
 name = "Vanilla"
 
-version = "AllDataCNN_" + HYP.MODE_OF_LEARNING
+version = "BasicCNN_" + HYP.MODE_OF_LEARNING
 
 weight_bias_list = list() #this is the weights and biases matrix
 
@@ -81,7 +81,7 @@ class Model():
 
 def Test():
     print("Making model")
-    DM = DatasetMaker(DP)
+    DM = DatasetMaker(DP, False)
     model = Model(DM)
     model.build_model_from_pickle(base_directory + "SAVED_WEIGHTS.pkl")
 
