@@ -17,8 +17,8 @@ HYP = Hyperparameters()
 DP = DataParser()
 
 name = "Vanilla"
-Cross = "bigbedroom"
-version = "DownstairsCNN_" + HYP.MODE_OF_LEARNING
+Cross = "downstairs"
+version = "AllDataCNN_test" + HYP.MODE_OF_LEARNING
 
 weight_bias_list = list() #this is the weights and biases matrix
 

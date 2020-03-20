@@ -10,7 +10,7 @@ import pickle
 
 from pipeline.MyCNNLibrary import * #this is my own "keras" extension onto tensorflow
 from pipeline.Hyperparameters import Hyperparameters
-from pipeline.DatasetMaker import DatasetMaker
+from pipeline.DatasetMaker_image import DatasetMaker
 from pipeline.DataParser import DataParser
 from housekeeping.csv_to_mat import ConfusionMatrixVisualizer
 HYP = Hyperparameters()
@@ -18,7 +18,7 @@ DP = DataParser()
 
 name = "Vanilla"
 
-version = "AllDataCNN_" + HYP.MODE_OF_LEARNING
+version = "AllDataCNN_test" + HYP.MODE_OF_LEARNING
 
 weight_bias_list = list() #this is the weights and biases matrix
 
@@ -30,7 +30,7 @@ except:
     print("directory exists!")
     pass
 
-logger = Logging(base_directory, 20, 20, 100) #makes logging object
+logger = Logging(base_directory, 1, 20, 100) #makes logging object
 pool_size = (int(DP.return_size_name(HYP.MODE_OF_LEARNING)/4.0 + 0.99))**2 * 8
 class Model():
     def __init__(self, DM):

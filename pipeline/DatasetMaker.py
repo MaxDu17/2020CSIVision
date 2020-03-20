@@ -51,6 +51,7 @@ class DatasetMaker():
         self.train_matrix_labels.clear()
 
         for i in range(self.hyp.EPOCH_SIZE):
+
             selection = random.randrange(1, len(self.train_set_data))
             self.train_matrix_data.append(self.train_set_data[selection])
             self.train_matrix_labels.append(self.train_set_labels[selection])
@@ -141,6 +142,7 @@ class DatasetMaker():
                     data = self.dp.get_square_data_norm(i + self.train_start, self.chunkIdentifier)
                     one_hot = self.make_one_hot(label)
                     self.train_set_data.append(data)
+
                     self.train_set_labels.append(one_hot)
 
         assert len(self.train_set_data) == len(self.train_set_labels), "problem with train set implementation"
@@ -169,6 +171,38 @@ class DatasetMaker():
 
     def _debug_get_test_size(self):
         return len(self.test_set_data)
+
+    def _debug_export_train_set(self):
+        path = "../setImages/test/"
+        ambcount = 0
+        workcount = 0
+        sleepcount = 0
+        walkcount = 0
+        fallcount = 0
+
+        for i in range(len(self.train_set_data)):
+            label = str(self.labels[np.argmax(self.train_set_labels[i])])
+
+            if label == "BedroomAmbient":
+                temppath = path + label + "_" + str(ambcount)
+                ambcount+=1
+            elif label == "BedroomFall":
+                temppath = path + label + "_" + str(fallcount)
+                fallcount += 1
+            elif label == "BedroomSleep":
+                temppath = path + label + "_" + str(sleepcount)
+                sleepcount += 1
+            elif label == "BedroomWalk":
+                temppath = path + label + "_" + str(walkcount)
+                walkcount += 1
+            elif label == "BedroomWork":
+                temppath = path + label + "_" + str(workcount)
+                workcount += 1
+            else:
+                raise Exception("Something wrong here")
+
+            self.dp.save_image(self.dp.frame_normalize_minmax_image(self.train_set_data[i]), temppath + ".jpg", "L")
+            print(temppath)
 
     def _debug_export_test_set(self):
         path = "../setImages/test/"
@@ -203,4 +237,35 @@ class DatasetMaker():
             print(temppath)
 
 
+    def _debug_export_valid_set(self):
+        path = "../setImages/valid/"
+        ambcount = 0
+        workcount = 0
+        sleepcount = 0
+        walkcount = 0
+        fallcount = 0
+
+        for i in range(len(self.valid_set_data)):
+            label = str(self.labels[np.argmax(self.valid_set_labels[i])])
+
+            if label == "BedroomAmbient":
+                temppath = path + label + "_" + str(ambcount)
+                ambcount+=1
+            elif label == "BedroomFall":
+                temppath = path + label + "_" + str(fallcount)
+                fallcount += 1
+            elif label == "BedroomSleep":
+                temppath = path + label + "_" + str(sleepcount)
+                sleepcount += 1
+            elif label == "BedroomWalk":
+                temppath = path + label + "_" + str(walkcount)
+                walkcount += 1
+            elif label == "BedroomWork":
+                temppath = path + label + "_" + str(workcount)
+                workcount += 1
+            else:
+                raise Exception("Something wrong here")
+
+            self.dp.save_image(self.dp.frame_normalize_minmax_image(self.valid_set_data[i]), temppath + ".jpg", "L")
+            print(temppath)
 

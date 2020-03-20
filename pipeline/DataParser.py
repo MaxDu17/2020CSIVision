@@ -263,21 +263,5 @@ class DataParser(Utility):
         return carrier
     '''
 
-    def test(self):
-        self.load_data("BedroomWork")
-        self.plot(self.get_square_data_norm(0, 4))
-        self.plot(self.get_square_data_norm(0, 3))
-        self.plot(self.get_square_data_norm(0, 2))
-        self.plot(self.get_square_data_norm(0, 1))
-        self.plot(self.get_square_data_norm(0, 0))
-
-
-'''
-k = DataParser()
-k.load_data("BedroomAmbient")
-
-k.plot(k.get_square_data_arbi_norm(0, 192, 0))
-k.plot(k.get_square_data_norm(0,0))
-'''
 
 
