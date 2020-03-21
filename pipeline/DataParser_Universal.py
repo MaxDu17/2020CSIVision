@@ -1,6 +1,7 @@
 import numpy as np
 from os import listdir
 from pipeline.ProjectUtility import Utility
+from pipeline.Hyperparameters import Hyperparameters
 
 masterdirectory = "../datasets"
 
@@ -8,12 +9,13 @@ masterdirectory = "../datasets"
 
 
 class DataParser_Universal(Utility):
-    def __init__(self, directoryList):
+    def __init__(self):
+        self.hyp = Hyperparameters()
         self.datasetList = list()
         self.amparr = list()
         self.superList = list()  # this will contain dictionasries for each directory
 
-        for largeDirectory in directoryList:
+        for largeDirectory in self.hyp.data_to_include:
             masteramparr = {}
             files = sorted(listdir(largeDirectory))
 

@@ -39,6 +39,8 @@ class DatasetMaker_Universal():
         self.test_start = self.hyp.VALIDATION_NUMBER + self.size - 1
         self.train_start = self.test_start + self.hyp.TEST_NUMBER + self.size - 1
 
+        self.train_matrix_data = list()
+        self.train_matrix_labels = list()
 
         self.train_count = 0
         self.valid_count = 0
@@ -136,12 +138,14 @@ class DatasetMaker_Universal():
                         data = self.dp.get_square_data_arbi_norm(start = i + self.validation_start, size = self.size,
                                                                  start_vert = self.hyp.third_start, removegaps = False)
                     else:
-                        data = self.dp.get_data_arbi_norm(start=i + self.validation_start, size=self.hyp.first_size1,
+                        data1 = self.dp.get_data_arbi_norm(start=i + self.validation_start, size=self.hyp.first_size1,
                                                                  start_vert=self.hyp.first_start1, size_vert = self.size, removegaps=False)
 
-                        data.extend(self.dp.get_data_arbi_norm(start=i + self.validation_start + self.hyp.first_size1,
+                        data2 = self.dp.get_data_arbi_norm(start=i + self.validation_start + self.hyp.first_size1,
                                                                size=self.hyp.first_size2,
-                                                               start_vert=self.hyp.first_start2, size_vert = self.size, removegaps=False))
+                                                               start_vert=self.hyp.first_start2, size_vert = self.size, removegaps=False)
+
+                        data = np.concatenate((data1, data2), axis = None)
 
 
                     one_hot = self.make_one_hot(label)
@@ -169,12 +173,16 @@ class DatasetMaker_Universal():
                         data = self.dp.get_square_data_arbi_norm(start=i + self.test_start, size = self.size,
                                                                  start_vert = self.hyp.third_start, removegaps = False)
                     else:
-                        data = self.dp.get_data_arbi_norm(start=i + self.test_start, size=self.hyp.first_size1,
+                        data1 = self.dp.get_data_arbi_norm(start=i + self.test_start, size=self.hyp.first_size1,
                                                                  start_vert=self.hyp.first_start1, size_vert = self.size, removegaps=False)
 
-                        data.extend(self.dp.get_data_arbi_norm(start=i + self.test_start + self.hyp.first_size1,
+                        data2 = self.dp.get_data_arbi_norm(start=i + self.test_start + self.hyp.first_size1,
                                                                size=self.hyp.first_size2,
-                                                               start_vert=self.hyp.first_start2, size_vert = self.size, removegaps=False))
+                                                               start_vert=self.hyp.first_start2, size_vert = self.size, removegaps=False)
+
+                        data = np.concatenate((data1, data2), axis=None)
+
+
 
                     one_hot = self.make_one_hot(label)
                     self.test_set_data.append(data)
@@ -186,7 +194,9 @@ class DatasetMaker_Universal():
         self.train_set_labels = list()
 
         for j in range(len(self.dp.superList)):
+            print("I'm on number " + str(j))
             for label in self.labels:
+                print("\tI'm on label " + label)
                 self.dp.load_data_multiple_file(label, j)
                 for i in range(self.dp.get_size() - (self.test_start + self.hyp.TEST_NUMBER + 2 * self.size)):
                     if self.mode == 0: #arbitrary mode
@@ -201,12 +211,14 @@ class DatasetMaker_Universal():
                         data = self.dp.get_square_data_arbi_norm(start=i + self.train_start, size = self.size,
                                                                  start_vert = self.hyp.third_start, removegaps = False)
                     else:
-                        data = self.dp.get_data_arbi_norm(start=i + self.train_start, size=self.hyp.first_size1,
+                        data1 = self.dp.get_data_arbi_norm(start=i + self.train_start, size=self.hyp.first_size1,
                                                                  start_vert=self.hyp.first_start1, size_vert = self.size, removegaps=False)
 
-                        data.extend(self.dp.get_data_arbi_norm(start=i + self.train_start + self.hyp.first_size1,
+                        data2 = self.dp.get_data_arbi_norm(start=i + self.train_start + self.hyp.first_size1,
                                                                size=self.hyp.first_size2,
-                                                               start_vert=self.hyp.first_start2, size_vert = self.size, removegaps=False))
+                                                               start_vert=self.hyp.first_start2, size_vert = self.size, removegaps=False)
+
+                        data = np.concatenate((data1, data2), axis=None)
 
 
                     one_hot = self.make_one_hot(label)
