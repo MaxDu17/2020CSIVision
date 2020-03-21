@@ -137,7 +137,7 @@ class DatasetMaker_Arbi():
                 self.dp.load_data_multiple_file(label, j)
                 size = self.dp.get_size()
                 print("\tTrain set on label: " + str(label) + " and file " + str(j))
-
+                #somethign wrong here
                 for i in range(size - (self.test_start + self.hyp.TEST_NUMBER + 2*self.size_of_sample)): #use the remainder
                     #print("\tcalling number: " + str(i) + "out of " + str(size - (self.test_start + self.hyp.TEST_NUMBER + self.size_of_sample)))
                     #print("calling position number" + str(i) + "out of" + str(size - (self.test_start + self.hyp.TEST_NUMBER + 2*self.size_of_sample)))

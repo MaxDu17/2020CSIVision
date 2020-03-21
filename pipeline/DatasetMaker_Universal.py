@@ -134,8 +134,14 @@ class DatasetMaker_Universal():
 
                     elif self.mode == 1 and self.chunkIdentifier == "third":
                         data = self.dp.get_square_data_arbi_norm(start = i + self.validation_start, size = self.size,
-                                                                 start_vert = self.hyp.second_start, removegaps = False)
-                    else
+                                                                 start_vert = self.hyp.third_start, removegaps = False)
+                    else:
+                        data = self.dp.get_data_arbi_norm(start=i + self.validation_start, size=self.hyp.first_size1,
+                                                                 start_vert=self.hyp.first_start1, size_vert = self.size, removegaps=False)
+
+                        data.extend(self.dp.get_data_arbi_norm(start=i + self.validation_start + self.hyp.first_size1,
+                                                               size=self.hyp.first_size2,
+                                                               start_vert=self.hyp.first_start2, size_vert = self.size, removegaps=False))
 
 
                     one_hot = self.make_one_hot(label)
@@ -144,41 +150,69 @@ class DatasetMaker_Universal():
                     # self.valid_set.append(DataPipeline(data= data, label = label, oneHot = one_hot, startIndex = i + self.validation_start))
         assert len(self.valid_set_data) == len(self.valid_set_labels), "problem with valid set implementation"
 
-    def make_test_set(self, start, size):
+    def make_test_set(self):
         self.test_set_data = list()
         self.test_set_labels = list()
         for j in range(len(self.dp.superList)):
-            for label in self.labels:  # each label
+            for label in self.labels:
                 self.dp.load_data_multiple_file(label, j)
                 for i in range(self.hyp.TEST_NUMBER):
-                    data = self.dp.get_square_data_arbi_norm(start=i + self.test_start, size=size, start_vert=start)
+                    if self.mode == 0: #arbitrary mode
+                        data = self.dp.get_square_data_arbi_norm(start=i + self.test_start, size=self.size,
+                                                             start_vert=self.start, removegaps = True)
+
+                    elif self.mode == 1 and self.chunkIdentifier == "second":
+                        data = self.dp.get_square_data_arbi_norm(start=i + self.test_start, size = self.size,
+                                                                 start_vert = self.hyp.second_start, removegaps = False)
+
+                    elif self.mode == 1 and self.chunkIdentifier == "third":
+                        data = self.dp.get_square_data_arbi_norm(start=i + self.test_start, size = self.size,
+                                                                 start_vert = self.hyp.third_start, removegaps = False)
+                    else:
+                        data = self.dp.get_data_arbi_norm(start=i + self.test_start, size=self.hyp.first_size1,
+                                                                 start_vert=self.hyp.first_start1, size_vert = self.size, removegaps=False)
+
+                        data.extend(self.dp.get_data_arbi_norm(start=i + self.test_start + self.hyp.first_size1,
+                                                               size=self.hyp.first_size2,
+                                                               start_vert=self.hyp.first_start2, size_vert = self.size, removegaps=False))
+
                     one_hot = self.make_one_hot(label)
                     self.test_set_data.append(data)
                     self.test_set_labels.append(one_hot)
-                    # self.test_set_struct.append(DataPipeline(data=data, label=label, oneHot=one_hot, startIndex=i + self.test_start))
-        assert len(self.test_set_data) == len(self.test_set_labels), "problem with test set implementation"
 
-    def make_train_set(self, start, size):  # not done
-        size_ = size
+
+    def make_train_set(self):  # not done
         self.train_set_data = list()
         self.train_set_labels = list()
+
         for j in range(len(self.dp.superList)):
-
-            for label in self.labels:  # each label
+            for label in self.labels:
                 self.dp.load_data_multiple_file(label, j)
-                size = self.dp.get_size()
-                print("\tTrain set on label: " + str(label) + " and file " + str(j))
+                for i in range(self.dp.get_size() - (self.test_start + self.hyp.TEST_NUMBER + 2 * self.size)):
+                    if self.mode == 0: #arbitrary mode
+                        data = self.dp.get_square_data_arbi_norm(start=i + self.train_start, size=self.size,
+                                                             start_vert=self.start, removegaps = True)
 
-                for i in range(
-                        size - (self.test_start + self.hyp.TEST_NUMBER + 2 * self.size_of_sample)):  # use the remainder
-                    # print("\tcalling number: " + str(i) + "out of " + str(size - (self.test_start + self.hyp.TEST_NUMBER + self.size_of_sample)))
-                    # print("calling position number" + str(i) + "out of" + str(size - (self.test_start + self.hyp.TEST_NUMBER + 2*self.size_of_sample)))
-                    data = self.dp.get_square_data_arbi_norm(i + self.train_start, size=size_, start_vert=start)
+                    elif self.mode == 1 and self.chunkIdentifier == "second":
+                        data = self.dp.get_square_data_arbi_norm(start=i + self.train_start, size = self.size,
+                                                                 start_vert = self.hyp.second_start, removegaps = False)
+
+                    elif self.mode == 1 and self.chunkIdentifier == "third":
+                        data = self.dp.get_square_data_arbi_norm(start=i + self.train_start, size = self.size,
+                                                                 start_vert = self.hyp.third_start, removegaps = False)
+                    else:
+                        data = self.dp.get_data_arbi_norm(start=i + self.train_start, size=self.hyp.first_size1,
+                                                                 start_vert=self.hyp.first_start1, size_vert = self.size, removegaps=False)
+
+                        data.extend(self.dp.get_data_arbi_norm(start=i + self.train_start + self.hyp.first_size1,
+                                                               size=self.hyp.first_size2,
+                                                               start_vert=self.hyp.first_start2, size_vert = self.size, removegaps=False))
+
+
                     one_hot = self.make_one_hot(label)
                     self.train_set_data.append(data)
                     self.train_set_labels.append(one_hot)
 
-        assert len(self.train_set_data) == len(self.train_set_labels), "problem with train set implementation"
 
     def num_labels(self):
         return len(self.labels)
@@ -204,38 +238,3 @@ class DatasetMaker_Universal():
 
     def _debug_get_test_size(self):
         return len(self.test_set_data)
-
-    def _debug_export_test_set(self):
-        path = "../setImages/test/"
-        ambcount = 0
-        workcount = 0
-        sleepcount = 0
-        walkcount = 0
-        fallcount = 0
-
-        for i in range(len(self.test_set_data)):
-            label = str(self.labels[np.argmax(self.test_set_labels[i])])
-
-            if label == "BedroomAmbient":
-                temppath = path + label + "_" + str(ambcount)
-                ambcount += 1
-            elif label == "BedroomFall":
-                temppath = path + label + "_" + str(fallcount)
-                fallcount += 1
-            elif label == "BedroomSleep":
-                temppath = path + label + "_" + str(sleepcount)
-                sleepcount += 1
-            elif label == "BedroomWalk":
-                temppath = path + label + "_" + str(walkcount)
-                walkcount += 1
-            elif label == "BedroomWork":
-                temppath = path + label + "_" + str(workcount)
-                workcount += 1
-            else:
-                raise Exception("Something wrong here")
-
-            self.dp.save_image(self.dp.frame_normalize_minmax_image(self.test_set_data[i]), temppath + ".jpg", "L")
-            print(temppath)
-
-
-

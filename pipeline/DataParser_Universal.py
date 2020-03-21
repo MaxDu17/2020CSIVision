@@ -115,6 +115,7 @@ class DataParser_Universal(Utility):
     def get_square_data_arbi_norm(self, start, size, start_vert, removegaps):
         return self.normalize(self.get_square_data_arbi(start, size, start_vert, removegaps))
 
-
+    def get_data_arbi_norm(self, start, size, start_vert, size_vert, removegaps):
+        return self.normalize(self.get_data_arbi(start, start + size, start_vert, size_vert, removegaps))
 
 

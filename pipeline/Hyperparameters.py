@@ -19,8 +19,10 @@ class Hyperparameters:
 
     first_start1 = 6
     first_end1 = 32
+    first_size1 = first_end1 - first_start1
     first_start2 = 33
     first_end2 = 59
+    first_size2 = first_end2 - first_start2
 
     firstSize = 52
     secondsize =  57
