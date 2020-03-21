@@ -30,7 +30,7 @@ except:
     print("directory exists!")
     pass
 
-logger = Logging(base_directory, 1, 20, 100) #makes logging object
+logger = Logging(base_directory, 10, 20, 100) #makes logging object
 pool_size = (int(DP.return_size_name(HYP.MODE_OF_LEARNING)/4.0 + 0.99))**2 * 8
 class Model():
     def __init__(self, DM):

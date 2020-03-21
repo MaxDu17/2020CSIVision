@@ -5,23 +5,6 @@ masterdirectory = "../datasets"
 
 directoryList = ["../datasets", "../datasets_bigbedroom", "../datasets_downstairs"]
 class DataParser(Utility):
-    ''' #thisis for single-file deployment
-    def __init__(self):
-        self.datasetList = list()
-        self.amparr = list()
-        self.masteramparr = {}
-
-        files = sorted(listdir(masterdirectory))
-
-        for file in files:
-            if file.find(".") < 0:
-                try:
-                    self.masteramparr[file] = self.getAmpArr(file)
-                    self.datasetList.append(file)
-                except:
-                    print(file + " was empty. I skipped it")
-    '''
-
     def __init__(self):
         self.datasetList = list()
         self.amparr = list()
@@ -118,12 +101,13 @@ class DataParser(Utility):
         return data
 
     def normalize(self, data): #only run this after you have removed chunky bits
+        newData = np.zeros(shape = [len(data), len(data[0])])
         for i in range(len(data)):
             min_ = min(data[i])
             max_ = max(data[i])
             for j in range(len(data[i])):
-                data[i][j] = (data[i][j]- min_)/(max_-min_)
-        return data
+                newData[i][j] = (data[i][j]- min_)/(max_-min_)
+        return newData
 
     '''
     def load_data(self, datafile): #must call at first

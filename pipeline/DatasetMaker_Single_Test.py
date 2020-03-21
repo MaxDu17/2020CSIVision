@@ -38,12 +38,18 @@ class DatasetMaker():
         self.test_count += 1
         return data_value, label_value
 
+    '''
     def test_batch(self):
         returnable_data = np.reshape(self.test_set_data,
                                      [(self.dp.get_size() - self.size_of_sample) * self.num_labels(),
                                       self.size_of_sample, self.size_of_sample, 1])
         return returnable_data, self.test_set_labels
+    '''
 
+    def test_batch(self):
+        returnable_data = np.reshape(self.test_set_data,
+                                     [self.hyp.TEST_NUMBER*self.num_labels(), self.size_of_sample, self.size_of_sample, 1])
+        return returnable_data, self.test_set_labels
 
 
     def make_test_set(self):
@@ -53,7 +59,8 @@ class DatasetMaker():
         for label in self.labels:  # each label
             self.dp.load_data(label)
             size = self.dp.get_size()
-            for i in range(size - self.size_of_sample):
+            for i in range(self.hyp.TEST_NUMBER):
+            #for i in range(size - self.size_of_sample):
                 data = self.dp.get_square_data_norm(i, self.chunkIdentifier)
                 one_hot = self.make_one_hot(label)
                 self.test_set_data.append(data)

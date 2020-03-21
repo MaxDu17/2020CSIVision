@@ -3,7 +3,6 @@ from os import listdir
 import random
 from pipeline.Hyperparameters import Hyperparameters
 from models.Utility import Utility
-import os as listdir
 
 # from pipeline.DataPipeline import DataPipeline
 
@@ -101,11 +100,12 @@ class DatasetMaker():
     def make_valid_set(self):
         self.valid_set_data = list()
         self.valid_set_labels = list()
-        files = sorted(listdir("../setImages/valid/"))
+        #print(listdir("../setImages/valid"))
+        files = sorted(listdir("../setImages/valid"))
         for file in files:
             print(file)
             label = file.split("_")[0]
-            data = self.dp.normalize(self.tool.load_image_to_mat(file))
+            data = self.dp.normalize(self.tool.load_image_to_mat("../setImages/valid/" + file))
             oneHot = self.make_one_hot(label)
             self.valid_set_data.append(data)
             self.valid_set_labels.append(oneHot)
@@ -115,11 +115,11 @@ class DatasetMaker():
     def make_test_set(self):
         self.test_set_data = list()
         self.test_set_labels = list()
-        files = sorted(listdir("../setImages/test/"))
+        files = sorted(listdir("../setImages/test"))
         for file in files:
             print(file)
             label = file.split("_")[0]
-            data = self.dp.normalize(self.tool.load_image_to_mat(file))
+            data = self.dp.normalize(self.tool.load_image_to_mat("../setImages/test/" + file))
             oneHot = self.make_one_hot(label)
             self.test_set_data.append(data)
             self.test_set_labels.append(oneHot)
@@ -127,11 +127,11 @@ class DatasetMaker():
     def make_train_set(self):  # not done
         self.train_set_data = list()
         self.train_set_labels = list()
-        files = sorted(listdir("../setImages/train/"))
+        files = sorted(listdir("../setImages/train"))
         for file in files:
             print(file)
             label = file.split("_")[0]
-            data = self.dp.normalize(self.tool.load_image_to_mat(file))
+            data = self.dp.normalize(self.tool.load_image_to_mat("../setImages/train/" + file))
             oneHot = self.make_one_hot(label)
             self.train_set_data.append(data)
             self.train_set_labels.append(oneHot)
