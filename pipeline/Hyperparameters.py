@@ -5,7 +5,7 @@ class Hyperparameters:
     LEARNING_RATE = 0.001
 
     MODE_OF_LEARNING = "third" #choices: first, second, third, all, raw
-    EPOCH_SIZE = 10
+    EPOCH_SIZE = 25
     SIZE = 20
     START = 50
     HOLD_PROB = 0.8
