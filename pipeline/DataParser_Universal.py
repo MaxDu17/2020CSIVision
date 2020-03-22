@@ -3,7 +3,7 @@ from os import listdir
 from pipeline.ProjectUtility import Utility
 from pipeline.Hyperparameters import Hyperparameters
 
-masterdirectory = "../datasets"
+#masterdirectory = "../datasets"
 
 #directoryList = ["../datasets", "../datasets_bigbedroom", "../datasets_downstairs"]
 
@@ -22,7 +22,7 @@ class DataParser_Universal(Utility):
             for file in files:
                 if file.find(".") < 0:
                     try:
-                        masteramparr[file] = self.getAmpArr(file)
+                        masteramparr[file] = self.getAmpArr(file, largeDirectory)
                         print(largeDirectory + "/" + file)
                         self.datasetList.append(file)
                     except:
@@ -34,8 +34,10 @@ class DataParser_Universal(Utility):
     def get_meta(self):
         return self.datasetList
 
-    def getAmpArr(self, dataset):
-        return self.csv_file_to_amp(masterdirectory + "/" + dataset + "/" + dataset + "_amplitude.csv")
+
+    def getAmpArr(self, dataset, mainfile):
+        return self.csv_file_to_amp(mainfile + "/" + dataset + "/" + dataset + "_amplitude.csv")
+
 
     def getMasterAmpArr(self, fileDirectory):
         return self.superList[fileDirectory]

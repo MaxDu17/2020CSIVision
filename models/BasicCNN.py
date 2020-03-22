@@ -10,11 +10,11 @@ import pickle
 
 from pipeline.MyCNNLibrary import * #this is my own "keras" extension onto tensorflow
 from pipeline.Hyperparameters import Hyperparameters
-from pipeline.DatasetMaker_image import DatasetMaker
-from pipeline.DataParser import DataParser
+from pipeline.DatasetMaker_Universal import DatasetMaker_Universal
+from pipeline.DataParser_Universal import DataParser_Universal
 from housekeeping.csv_to_mat import ConfusionMatrixVisualizer
 HYP = Hyperparameters()
-DP = DataParser()
+DP = DataParser_Universal()
 
 name = "Vanilla"
 
@@ -31,7 +31,7 @@ except:
     pass
 
 logger = Logging(base_directory, 10, 20, 100) #makes logging object
-pool_size = (int(DP.return_size_name(HYP.MODE_OF_LEARNING)/4.0 + 0.99))**2 * 8
+pool_size = (int(HYP.sizedict[HYP.MODE_OF_LEARNING]/4.0 + 0.99))**2 * 8
 class Model():
     def __init__(self, DM):
         self.cnn_1 = Convolve(weight_bias_list, [3, 3, 1, 4], "Layer_1_CNN")
@@ -84,7 +84,7 @@ def Big_Train():
     print("*****************Training*****************")
 
     print("loading dataset")
-    DM = DatasetMaker(DP)
+    DM = DatasetMaker_Universal(DP, HYP.MODE_OF_LEARNING)
 
     optimizer = tf.keras.optimizers.Adam(learning_rate = HYP.LEARNING_RATE) #can use a changing learning rate
     loss_function = tf.keras.losses.CategoricalCrossentropy()
@@ -162,7 +162,7 @@ def Test_live(model, datafeeder):
 
 def Test():
     print("Making model")
-    DM = DatasetMaker(DP)
+    DM = DatasetMaker_Universal(DP, HYP.MODE_OF_LEARNING)
     model = Model(DM)
     model.build_model_from_pickle(base_directory + "SAVED_WEIGHTS.pkl")
 
