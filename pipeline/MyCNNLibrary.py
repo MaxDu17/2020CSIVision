@@ -96,7 +96,8 @@ class Logging(): #this class reduces the number of file directory changes per mo
             dbfile = open(self.base_dir +  "SAVED_WEIGHTS.pkl", "ab")
             pickle.dump(big_list, dbfile)
 
-    def make_confusion_matrix(self, prediction, label):
+    @staticmethod
+    def make_confusion_matrix(prediction, label):
         assert len(label) == len(prediction), "you seem to have messed up your dimensions!"
         conf = np.zeros(shape=[len(label[0]), len(prediction[0])])
         for i in range(len(prediction)):
@@ -105,22 +106,24 @@ class Logging(): #this class reduces the number of file directory changes per mo
             conf[k][l] += 1
         return conf
 
-    def test_log(self, prediction, label):
-        test = open(self.base_dir+ "confusion.csv", "w")
+    @staticmethod
+    def test_log(base_dir, prediction, label, confusionmodifier):
+        test = open(base_dir+ "confusion" + confusionmodifier + ".csv", "w")
         logger = csv.writer(test, lineterminator="\n")
 
-        conf = self.make_confusion_matrix(prediction, label)
+        conf = Logging.make_confusion_matrix(prediction, label)
 
         for iterate in conf:
             logger.writerow(iterate)
 
-        test_ = open(self.base_dir + "results.csv", "w")
+        test_ = open(base_dir + "results.csv", "w")
         logger_ = csv.writer(test_, lineterminator="\n")
         logger_.writerow([accuracy(prediction, label)])
 
     def log_valid(self, valid_accuracy, step):
         tf.summary.scalar(name="Validation_accuracy", data=valid_accuracy, step=step)
         self.valid_logger.writerow([valid_accuracy])
+
 
 
 class Convolve():
