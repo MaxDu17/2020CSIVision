@@ -152,6 +152,7 @@ def Test_live(model, datafeeder):
 
 def Test():
     print("Making model")
+    testTag = "_bigbedroom_only"
     DM = DatasetMaker_Universal(DP, Hyperparameters.MODE_OF_LEARNING)
     model = Model(DM)
     model.build_model_from_pickle(base_directory + "SAVED_WEIGHTS.pkl")
@@ -160,10 +161,10 @@ def Test():
 
     #data = data[0]  # this is because we now have multiple images in the pickle
     predictions, l2loss = model.call(data)
-    Logging.test_log(base_directory, predictions, label, "_LOSonly")
+    Logging.test_log(base_directory, predictions, label, testTag)
 
     print("This is the test set accuracy: {}".format(accuracy(predictions, label)))
-    ConfusionMatrixVisualizer(name = name, version = version, testTag = "")
+    ConfusionMatrixVisualizer(name = name, version = version, testTag = testTag)
 
 
 def main():
