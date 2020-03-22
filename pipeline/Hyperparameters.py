@@ -32,5 +32,5 @@ class Hyperparameters:
     rawsize = 192
 
     sizedict = {"first" : 52, "second": 57, "third": 57, "all": 166, "raw": 192}
-    data_to_include = ["../datasets_bigbedroom"]
-    #data_to_include = ["../datasets", "../datasets_bigbedroom", "../datasets_downstairs"]
+    #data_to_include = ["../datasets_bigbedroom"]
+    data_to_include = ["../datasets", "../datasets_bigbedroom", "../datasets_downstairs"]

@@ -123,7 +123,7 @@ def Big_Train():
         gradients = tape.gradient(pred_loss, weight_bias_list)
         optimizer.apply_gradients(zip(gradients, weight_bias_list))
 
-    Test_live(model, DM, logger)
+    Test_live(model, DM)
 
 def Validation(model, datafeeder):
     print("\n##############VALIDATION##############\n")
