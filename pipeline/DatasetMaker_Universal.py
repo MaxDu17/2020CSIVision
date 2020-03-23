@@ -128,7 +128,7 @@ class DatasetMaker_Universal():
                 for i in range(self.hyp.VALIDATION_NUMBER):
                     if self.mode == 0: #arbitrary mode
                         data = self.dp.get_square_data_arbi_norm(start=i + self.validation_start, size=self.size,
-                                                             start_vert=self.start, removegaps = True)
+                                                             start_vert=self.start, removegaps = False)
 
                     elif self.mode == 1 and self.chunkIdentifier == "second":
                         data = self.dp.get_square_data_arbi_norm(start = i + self.validation_start, size = self.size,
@@ -163,7 +163,7 @@ class DatasetMaker_Universal():
                 for i in range(self.hyp.TEST_NUMBER):
                     if self.mode == 0: #arbitrary mode
                         data = self.dp.get_square_data_arbi_norm(start=i + self.test_start, size=self.size,
-                                                             start_vert=self.start, removegaps = True)
+                                                             start_vert=self.start, removegaps = False)
 
                     elif self.mode == 1 and self.chunkIdentifier == "second":
                         data = self.dp.get_square_data_arbi_norm(start=i + self.test_start, size = self.size,
@@ -201,7 +201,7 @@ class DatasetMaker_Universal():
                 for i in range(self.dp.get_size() - (self.test_start + self.hyp.TEST_NUMBER + 2 * self.size)):
                     if self.mode == 0: #arbitrary mode
                         data = self.dp.get_square_data_arbi_norm(start=i + self.train_start, size=self.size,
-                                                             start_vert=self.start, removegaps = True)
+                                                             start_vert=self.start, removegaps = False)
 
                     elif self.mode == 1 and self.chunkIdentifier == "second":
                         data = self.dp.get_square_data_arbi_norm(start=i + self.train_start, size = self.size,

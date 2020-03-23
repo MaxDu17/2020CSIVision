@@ -1,24 +1,14 @@
-
-import tensorflow as tf
-import numpy as np
-import csv
-import os
-from pipeline.ProjectUtility import Utility
-import shutil
-import pickle
-
-
 from pipeline.MyCNNLibrary import * #this is my own "keras" extension onto tensorflow
 from pipeline.Hyperparameters import Hyperparameters
-from pipeline.DatasetMaker_arbi import DatasetMaker_Arbi
-from pipeline.DataParser import DataParser
+from pipeline.DatasetMaker_Universal import DatasetMaker_Universal
+from pipeline.DataParser_Universal import DataParser_Universal
 from housekeeping.csv_to_mat import ConfusionMatrixVisualizer
-HYP = Hyperparameters()
-DP = DataParser()
+
+DP = DataParser_Universal()
 
 
 name = "Arbi"
-version = "AllDataCNN_" + str(HYP.START) + "_" + str(HYP.SIZE)
+version = "AllDataCNN_" + str(Hyperparameters.START) + "_" + str(Hyperparameters.SIZE)
 
 weight_bias_list = list() #this is the weights and biases matrix
 
@@ -30,8 +20,8 @@ except:
     print("directory exists!")
     pass
 
-logger = Logging(base_directory, 20, 20, 100) #makes logging object
-pool_size = (int(HYP.SIZE/4.0 + 0.99))**2 * 8
+
+pool_size = (int(Hyperparameters.SIZE/4.0 + 0.99))**2 * 8
 class Model():
     def __init__(self, DM):
         self.cnn_1 = Convolve(weight_bias_list, [3, 3, 1, 4], "Layer_1_CNN")
@@ -78,15 +68,15 @@ class Model():
         return output, l2
 
 def Big_Train():
-
+    logger = Logging(base_directory, 20, 20, 100)  # makes logging object
     print("Is there a GPU available: "),
     print(tf.test.is_gpu_available())
     print("*****************Training*****************")
 
     print("loading dataset")
-    DM = DatasetMaker_Arbi(DP, HYP.START, HYP.SIZE)
+    DM = DatasetMaker_Universal(DP, Hyperparameters.START, Hyperparameters.SIZE)
 
-    optimizer = tf.keras.optimizers.Adam(learning_rate = HYP.LEARNING_RATE) #can use a changing learning rate
+    optimizer = tf.keras.optimizers.Adam(learning_rate = Hyperparameters.LEARNING_RATE) #can use a changing learning rate
     loss_function = tf.keras.losses.CategoricalCrossentropy()
 
 
@@ -116,7 +106,7 @@ def Big_Train():
             predictions, l2_loss = model.call(data) #this is the big call
 
             pred_loss = loss_function(label, predictions) #this is the loss function
-            pred_loss = pred_loss + HYP.L2WEIGHT * l2_loss #this implements lasso regularization
+            pred_loss = pred_loss + Hyperparameters.L2WEIGHT * l2_loss #this implements lasso regularization
 
             if epoch == 0: #creates graph
                 with summary_writer.as_default():
@@ -153,16 +143,17 @@ def Test_live(model, datafeeder):
     data, label = datafeeder.test_batch()
 
     predictions, l2loss = model.call(data)
-    logger.test_log(predictions, label)
+    Logging.test_log(base_directory, predictions, label, "")
 
     print("This is the test set accuracy: {}".format(accuracy(predictions, label)))
     right, wrong, wrong_index = record_error_with_labels(data, label, predictions)
-    ConfusionMatrixVisualizer(name=name, version=version, testTag="")
+    ConfusionMatrixVisualizer(name=name, version=version, testTag = "")
     return right, wrong, wrong_index
 
 def Test():
     print("Making model")
-    DM = DatasetMaker_Arbi(DP, HYP.START, HYP.SIZE)
+    testTag = "_bigbedroom_only"
+    DM = DatasetMaker_Universal(DP, Hyperparameters.MODE_OF_LEARNING)
     model = Model(DM)
     model.build_model_from_pickle(base_directory + "SAVED_WEIGHTS.pkl")
 
@@ -170,9 +161,10 @@ def Test():
 
     #data = data[0]  # this is because we now have multiple images in the pickle
     predictions, l2loss = model.call(data)
+    Logging.test_log(base_directory, predictions, label, testTag)
 
     print("This is the test set accuracy: {}".format(accuracy(predictions, label)))
-    ConfusionMatrixVisualizer(name=name, version=version, testTag="")
+    ConfusionMatrixVisualizer(name = name, version = version, testTag = testTag)
 
 
 def main():
